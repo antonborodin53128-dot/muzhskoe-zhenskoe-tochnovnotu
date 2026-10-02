@@ -200,11 +200,12 @@ animation:bgloop1 22s linear infinite;will-change:background-position}
 .wallPart{position:absolute;width:68px;background:repeating-linear-gradient(0deg,#140912 0 22px,#26101e 23px 25px);border-left:2px solid #ff4fa8;border-right:2px solid #ff4fa8;box-shadow:inset 0 0 20px #ff3c9924,0 0 16px #ff2e9655;z-index:7}.wallPart:after{content:"";position:absolute;inset:8px 11px;border-left:1px solid #ff67b044;border-right:1px solid #ff67b044}.wallCap{position:absolute;left:-10px;right:-10px;height:8px;background:#120910;border:2px solid #ff75bb;box-shadow:0 0 12px #ff4fa8,0 0 28px #ff2e9660}
 #wallTop .wallCap{bottom:0}#wallBottom .wallCap{top:0}
 .msg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#030203e8;font-size:104px;font-weight:900;letter-spacing:3px;z-index:30;text-shadow:0 0 18px #ff4fa866}
-.waitWrap{display:flex;align-items:center;justify-content:center;gap:30px}
-.loader{width:62px;height:62px;border-radius:50%;border:7px solid #ff4fa82b;border-top-color:#ff5caf;border-right-color:#ff5caf;box-shadow:0 0 18px #ff3c9988,inset 0 0 12px #ff3c9944;animation:spinLoader .85s linear infinite}
-.countNum{font-family:"Arial Black",Arial,sans-serif;font-size:clamp(150px,22vw,310px);line-height:.85;color:#fff;text-shadow:0 0 12px #fff,0 0 30px #ff4fa8,0 0 70px #ff2e96;animation:countPulse .92s cubic-bezier(.18,.8,.2,1) both}
-@keyframes spinLoader{to{transform:rotate(360deg)}}
-@keyframes countPulse{0%{opacity:0;transform:scale(.35);filter:blur(12px)}28%{opacity:1;transform:scale(1.13);filter:blur(0)}55%{transform:scale(1)}82%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.38);filter:blur(3px)}}
+.waitWrap{display:flex;align-items:center;justify-content:center;gap:38px;font-family:"Arial Black",Arial,sans-serif;font-size:clamp(118px,10vw,190px);line-height:1;letter-spacing:4px}
+.loader{position:relative;width:76px;height:76px;flex:0 0 76px;border-radius:50%;background:conic-gradient(from 0deg,transparent 0 58%,#ff4fa8 72%,#fff 86%,#ff4fa8 94%,transparent 100%);filter:drop-shadow(0 0 10px #ff4fa8) drop-shadow(0 0 20px #ff2e9699);animation:spinLoader 1.15s linear infinite;transform-origin:50% 50%}
+.loader:after{content:"";position:absolute;inset:9px;border-radius:50%;background:#030203;box-shadow:inset 0 0 12px #ff4fa833}
+.countNum{font-family:"Arial Black",Arial,sans-serif;font-size:clamp(170px,24vw,330px);line-height:.85;color:#fff;text-shadow:0 0 12px #fff,0 0 30px #ff4fa8,0 0 70px #ff2e96;animation:countPulse .92s cubic-bezier(.18,.8,.2,1) both}
+@keyframes spinLoader{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes countPulse{0%{opacity:0;transform:scale(.55)}28%{opacity:1;transform:scale(1.13)}55%{transform:scale(1)}82%{opacity:1;transform:scale(1)}100%{opacity:0;transform:scale(1.32)}}
 .mic{position:absolute;right:18px;bottom:16px;padding:12px 16px;background:#ff3199;color:#fff;border:0;border-radius:10px;font-weight:900;z-index:40}
 </style>
 <main class=stage>
@@ -292,11 +293,16 @@ function anim(t){let dt=Math.min(.05,(t-lt)/1000);lt=t;drawWave(dt);if(S&&S.phas
 function draw(s){let phaseChanged=!S||S.phase!==s.phase;S=s;$("#who").textContent=s.name||"";$("#note").textContent=s.note;$("#sc").textContent=s.score;let q=Math.max(0,Math.ceil(s.remaining));$("#tm").textContent=q>=60?"01:00":"00:"+String(q).padStart(2,"0");if(s.phase==="play"){$("#msg").style.display="none";if(phaseChanged)resetWall()}else{
  let m=$("#msg");m.style.display="flex";
  if(s.phase==="prep"){
+   m.dataset.view="prep";
    let num=Math.max(1,Math.ceil(s.remaining));
    if(m.dataset.count!==String(num)){m.dataset.count=String(num);m.innerHTML=`<div class=countNum>${num}</div>`}
  }else{
    m.dataset.count="";
-   m.innerHTML=s.phase==="ready"?"ГОТОВ":s.phase==="timeup"?"ВРЕМЯ!":s.phase==="finished"?"ФИНИШ":`<div class=waitWrap><span>ОЖИДАНИЕ</span><i class=loader></i></div>`;
+   let key=s.phase;
+   if(m.dataset.view!==key){
+     m.dataset.view=key;
+     m.innerHTML=s.phase==="ready"?"ГОТОВ":s.phase==="timeup"?"ВРЕМЯ!":s.phase==="finished"?"ФИНИШ":`<div class=waitWrap><span>ОЖИДАНИЕ</span><i class=loader></i></div>`;
+   }
  }
 } }
 setInterval(async()=>{try{draw(await fetch("/api/state?_="+Date.now(),{cache:"no-store"}).then(x=>x.json()))}catch(e){}},120);audio()
