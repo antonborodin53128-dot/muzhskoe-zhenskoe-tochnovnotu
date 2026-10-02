@@ -301,7 +301,7 @@ function draw(s){let phaseChanged=!S||S.phase!==s.phase;S=s;$("#who").textConten
    let key=s.phase;
    if(m.dataset.view!==key){
      m.dataset.view=key;
-     m.innerHTML=s.phase==="ready"?"ГОТОВ":s.phase==="timeup"?"ВРЕМЯ!":s.phase==="finished"?"ФИНИШ":`<div class=waitWrap><span>ОЖИДАНИЕ</span><i class=loader></i></div>`;
+     m.innerHTML=s.phase==="ready"?(s.name||"УЧАСТНИК"):s.phase==="timeup"?"ВРЕМЯ!":s.phase==="finished"?"ФИНИШ":`<div class=waitWrap><span>ОЖИДАНИЕ</span><i class=loader></i></div>`;
    }
  }
 } }
