@@ -152,7 +152,7 @@ animation:bgloop 22s linear infinite;will-change:transform}
 </main>
 <script>
 const NS=["DO","RE","MI","FA","SOL","LA","TI"],$=x=>document.querySelector(x);
-let st,ctx,an,b,sr=48000,sm=-1,targetPos=-1,filteredPos=-1,micOK=false,S=null,x=.84,mode="in",lt=performance.now(),hitting=false,pitchHist=[],wallNote=0,wavePhase=0,lastVoice=0,lastMidi=null;
+let st,ctx,an,b,sr=48000,sm=-0.62,targetPos=-0.62,filteredPos=-0.62,micOK=false,S=null,x=.84,mode="in",lt=performance.now(),hitting=false,pitchHist=[],wallNote=0,wavePhase=0,lastVoice=0,lastMidi=null;
 /* Высокие ноты сверху, низкие снизу: TI ... DO */
 function ty(i){return 88-i*(76/6)}
 $("#lines").innerHTML=NS.map((n,i)=>`<div class=guide style="top:${ty(i)}%"></div><div class=noteLabel id=l${i} style="top:${ty(i)}%">${n}</div>`).join("");
@@ -174,22 +174,22 @@ function listen(){
  if(m!=null){
    if(lastMidi!=null){while(m-lastMidi>7)m-=12;while(lastMidi-m>7)m+=12}
    lastMidi=m;lastVoice=now;
-   let p=continuousPos(m);pitchHist.push(p);if(pitchHist.length>9)pitchHist.shift();
+   let p=continuousPos(m);pitchHist.push(p);if(pitchHist.length>13)pitchHist.shift();
    let z=[...pitchHist].sort((a,b)=>a-b),med=z[Math.floor(z.length/2)];
    /* Voice tremble dead-zone: ignore small pitch wobble. Larger intentional
       changes move the target with a speed limit instead of teleporting. */
    if(filteredPos<0)filteredPos=med;
    let diff=med-filteredPos;
-   if(Math.abs(diff)>.16){
-     let step=Math.min(Math.abs(diff)-.16,.055);
+   if(Math.abs(diff)>.20){
+     let step=Math.min(Math.abs(diff)-.20,.032);
      filteredPos+=Math.sign(diff)*step;
    }
    targetPos=filteredPos;
    /* active guide is driven by the ball position below, not raw mic pitch */
- }else if(now-lastVoice>180){targetPos=-1.05;filteredPos=-1;lastMidi=null;pitchHist.length=0;active(-1)}
+ }else if(now-lastVoice>180){targetPos=-0.62;filteredPos=-0.62;lastMidi=null;pitchHist.length=0;active(-1)}
  let voiced=(now-lastVoice)<=180;
  /* Singing: deliberately heavy movement. Silence: faster safe descent. */
- sm+=(targetPos-sm)*(voiced?.045:.18);
+ sm+=(targetPos-sm)*(voiced?.028:.13);
  /* One source of truth: highlighted note follows the actual smoothed ball. */
  if(voiced && sm>=-.45 && sm<=6.45){
    let ballNote=Math.max(0,Math.min(6,Math.round(sm)));
