@@ -166,6 +166,51 @@ radial-gradient(ellipse at 91% 61%,#ff4b9e66 0 7%,#841c5b4d 17%,transparent 31%)
 @keyframes ringSpin{to{transform:rotate(360deg)}}@keyframes numEnter{0%{transform:scale(.25);opacity:0;filter:blur(14px)}28%{transform:scale(1.16);opacity:1;filter:blur(0)}62%{transform:scale(1)}100%{transform:scale(.82);opacity:.25;filter:blur(4px)}}
 @keyframes startFlash{0%{transform:scale(.55);opacity:0}30%{transform:scale(1.08);opacity:1}100%{transform:scale(1);opacity:1}}25%{transform:scale(1);opacity:1}75%{transform:scale(1);opacity:1}100%{transform:scale(.72);opacity:.15}}
 .mic{position:absolute;right:18px;bottom:16px;padding:12px 16px;background:#ff3199;color:#fff;border:0;border-radius:10px;font-weight:900;z-index:40}
+
+/* ===== CONCERT STAGE V14 — REAL SCREEN OVERRIDE ===== */
+.stage{padding:18px 22px 22px!important;background:#020205!important}
+.hud{height:96px!important;grid-template-columns:1.25fr .9fr 1.1fr!important}
+.brand{padding:13px 25px!important;background:#0a0810!important;border:1px solid #ff3da4!important;border-radius:0!important;clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%)!important;font-size:35px!important;box-shadow:0 0 24px #ff2f9525!important}
+.brand:before{left:0!important;top:0!important;width:5px!important;height:100%!important}
+.brand:after{right:0!important;bottom:0!important;width:40%!important;height:2px!important}
+.pill{border-radius:2px!important;border-color:#4d2940!important;background:#09080e!important}
+.game{border-radius:2px!important;border:1px solid #ff3fa74d!important;background:radial-gradient(ellipse at 50% 105%,#6c1646 0,#251027 25%,#09070f 55%,#010103 100%)!important;box-shadow:inset 0 0 100px #000,0 0 28px #ff2f9417!important;perspective:900px!important}
+.motion{display:none!important}
+#stars{display:none!important}
+.vignette{z-index:12!important;box-shadow:inset 0 0 100px #000b!important}
+.lights{display:block!important;position:absolute;inset:0;z-index:2;overflow:hidden;pointer-events:none}
+.beam{display:block!important;position:absolute;top:-15%;width:16%;height:125%;opacity:.28;filter:blur(9px);transform-origin:50% 0;clip-path:polygon(46% 0,54% 0,100% 100%,0 100%);background:linear-gradient(#ff9bd000,#ff5ab65e 10%,#ff35922b 58%,transparent 85%);animation:sweepV14 6s ease-in-out infinite alternate}
+.b1{left:6%;animation-delay:-1s}.b2{left:29%;animation-delay:-3s;background:linear-gradient(#b18cff00,#9a6aff50,transparent)}.b3{right:28%;animation-delay:-4.5s}.b4{right:5%;animation-delay:-2s;background:linear-gradient(#b18cff00,#805cff48,transparent)}
+@keyframes sweepV14{from{transform:rotate(-14deg)}to{transform:rotate(14deg)}}
+.concertFloor{display:block!important;position:absolute;left:-16%;right:-16%;bottom:-24%;height:68%;z-index:3;transform:perspective(520px) rotateX(64deg);transform-origin:bottom;background:repeating-linear-gradient(90deg,transparent 0 8%,#ff3ca82d 8.15% 8.3%,transparent 8.45% 16%),repeating-linear-gradient(0deg,transparent 0 44px,#ff3ca82b 45px,#fff1 46px,transparent 47px 90px);mask-image:linear-gradient(to top,#000 20%,#000b 55%,transparent);animation:floorV14 1.8s linear infinite}
+@keyframes floorV14{to{background-position:0 90px}}
+#concertFx{display:block!important;position:absolute;inset:0;width:100%;height:100%;z-index:5;pointer-events:none}
+
+/* Seven note lanes, explicitly full width */
+#lines{position:absolute!important;inset:0!important;z-index:8!important;pointer-events:none!important}
+.guide{position:absolute!important;left:0!important;right:0!important;width:100%!important;height:2px!important;border:0!important;background:linear-gradient(90deg,#ff45a91c,#ff58b55f 14%,#ff75c074 78%,#ff45a925)!important;box-shadow:0 0 7px #ff3ca846!important}
+.guide:after{content:""!important;position:absolute!important;inset:0!important;border-top:1px dashed #fff3!important}
+#noteLabels{position:absolute!important;inset:0!important;z-index:18!important;pointer-events:none!important}
+.noteLabel{right:18px!important;width:68px!important;padding:6px 0!important;background:#05050adf!important;border:1px solid #ff54af70!important;border-radius:2px!important;font-size:20px!important;color:#ff63b8!important}
+.noteLabel.active{color:#090309!important;background:#fff!important;border-color:#fff!important;transform:translateY(-50%) scale(1.6)!important;text-shadow:none!important;box-shadow:0 0 12px #fff,0 0 34px #ff3ca8!important}
+
+/* New player */
+.dot{width:40px!important;height:40px!important;z-index:16!important;background:radial-gradient(circle at 36% 32%,#fff 0 10%,#ffd8ed 16%,#ff62b9 35%,#ff218f 60%,#5d1039 100%)!important;border:2px solid #fff!important;box-shadow:0 0 10px #fff,0 0 24px #ff4eaf,0 0 55px #ff208e!important}
+.dot:before{inset:-9px!important;border:1px solid #ff7ac477!important;animation:ringV14 2s linear infinite}.dot:after{display:block!important;content:""!important;position:absolute!important;inset:-16px!important;border-radius:50%!important;border:1px dashed #fff4!important;animation:ringV14 3.2s linear infinite reverse!important}
+@keyframes ringV14{to{transform:rotate(360deg)}}
+.trail{z-index:15!important;filter:drop-shadow(0 0 5px #ff3ca8)!important}.trail .main{stroke-width:3!important}.trail .sub{stroke-width:1.5!important}.trail .pulse{stroke-width:1!important}
+
+/* New concert-truss wall */
+.wallPart{width:74px!important;z-index:14!important;background:linear-gradient(90deg,#07070b,#292733 14%,#0b0b10 22%,#15151d 78%,#2c2936 86%,#07070b)!important;border:1px solid #77717e!important;border-left:4px solid #ff3da4!important;border-right:4px solid #ff3da4!important;box-shadow:0 0 22px #000,inset 0 0 18px #000!important}
+.wallPart:after{content:""!important;position:absolute!important;inset:9px 13px!important;border:1px solid #55525d!important;background:repeating-linear-gradient(0deg,#32313a 0 3px,#09090d 3px 8px)!important}
+.wallCap{left:-9px!important;right:-9px!important;height:8px!important;background:linear-gradient(90deg,#ff2992,#fff,#ff2992)!important;border:0!important;box-shadow:0 0 16px #ff3da4!important}
+
+/* Stage cue countdown */
+.msg{background:radial-gradient(circle,#ff2f8d1c,#020205df 60%)!important}
+.msg .countHud{width:215px!important;height:215px!important;border-radius:50%!important;background:#07060ce8!important;border:2px solid #ff50af!important;box-shadow:0 0 40px #ff2f9870,inset 0 0 45px #ff2f9820!important}
+.msg .countHud:before{inset:-13px!important;border-radius:50%!important;border:2px dashed #fff5!important;border-left-color:#ff3ba2!important;animation:ringV14 2s linear infinite!important}
+.msg .countHud:after{display:block!important;inset:18px!important;border-radius:50%!important;border-top:3px solid #fff!important;border-right:3px solid transparent!important;border-bottom:3px solid #ff3ba2!important;border-left:3px solid transparent!important;animation:ringV14 1.2s linear infinite reverse!important}
+.countNum{font-size:108px!important;text-shadow:0 0 12px #fff,0 0 32px #ff3ba2!important}
 </style>
 <style>#noteLabels{position:absolute;inset:0;z-index:17;pointer-events:none}</style><main class=stage>
  <header class=hud>
