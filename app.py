@@ -181,12 +181,16 @@ SCREEN=r"""<!doctype html><meta charset=utf-8><meta name=viewport content="width
 .game{position:relative;flex:1;min-height:0;border:1px solid #3b1d30;border-radius:18px;overflow:hidden;background:linear-gradient(90deg,#030203,#080407 48%,#030203)}
 .vignette{position:absolute;inset:0;box-shadow:inset 0 0 100px #000;pointer-events:none;z-index:12}
 .motion{position:absolute;inset:0;overflow:hidden;opacity:.72}
-.motion:before,.motion:after{content:"";position:absolute;left:0;top:0;width:200%;height:100%;background:
-radial-gradient(circle,#ff5caf78 0 1px,transparent 2px) 0 0/150px 95px,
-linear-gradient(90deg,transparent 0 86%,#ff4fa81d 87% 88%,transparent 89%) 0 0/220px 100%;
-animation:bgloop 22s linear infinite;will-change:transform}
-.motion:after{opacity:.24;filter:blur(.5px);background-size:260px 155px,390px 100%;animation-duration:38s}
-@keyframes bgloop{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.motion:before,.motion:after{content:"";position:absolute;inset:0;background-image:
+radial-gradient(circle,#ff5caf78 0 1px,transparent 2px),
+linear-gradient(90deg,transparent 0 86%,#ff4fa81d 87% 88%,transparent 89%);
+background-size:150px 95px,220px 100%;
+background-position:0 0,0 0;
+background-repeat:repeat,repeat;
+animation:bgloop1 22s linear infinite;will-change:background-position}
+.motion:after{opacity:.24;filter:blur(.5px);background-size:260px 155px,390px 100%;animation:bgloop2 38s linear infinite}
+@keyframes bgloop1{from{background-position:0 0,0 0}to{background-position:-3300px 0,-3300px 0}}
+@keyframes bgloop2{from{background-position:0 0,0 0}to{background-position:-10140px 0,-10140px 0}}
 .guide{position:absolute;left:0;right:116px;border-top:1px solid #7e3d6350;z-index:1}
 .guide:after{content:"";position:absolute;left:0;right:0;top:-1px;border-top:1px dashed #ff55aa1f}
 .noteLabel{position:absolute;right:24px;width:78px;text-align:center;transform:translateY(-50%);font-size:26px;font-weight:900;letter-spacing:1.5px;color:#ff4fa8;transition:transform .24s ease,color .24s ease,text-shadow .24s ease;z-index:9}
