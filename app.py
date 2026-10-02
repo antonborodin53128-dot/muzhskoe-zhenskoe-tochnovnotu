@@ -108,34 +108,63 @@ setInterval(async()=>{if(busy)return;try{draw(await fetch("/api/state?_="+Date.n
 </script>"""
 SCREEN=r"""<!doctype html><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1">
 <style>
-*{box-sizing:border-box}body{margin:0;background:#030203;color:white;font-family:Arial;overflow:hidden}.w{height:100vh;padding:22px 32px;display:flex;flex-direction:column}
-.top{height:88px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;font-weight:900;position:relative;z-index:8}
-.title{font-size:32px;letter-spacing:3px}.who{text-align:center;color:#d8c8d1;font-size:22px}.stat{text-align:right;font-size:25px}.stat b{color:#ff5caf}
-.game{position:relative;flex:1;border:1px solid #51203e;border-radius:18px;overflow:hidden;background:radial-gradient(circle at 60% 50%,#1a0713 0,#080407 34%,#030203 72%)}
-.bg{position:absolute;inset:0;overflow:hidden}.bg:before,.bg:after{content:"";position:absolute;inset:-20% -50%;background-image:radial-gradient(circle,#ff4ca455 1px,transparent 2px);background-size:110px 80px;animation:drift 18s linear infinite}
-.bg:after{opacity:.28;background-size:190px 140px;animation-duration:32s;transform:translateX(15%)}@keyframes drift{to{transform:translateX(-28%)}}
-.line{position:absolute;left:0;right:118px;border-top:1px dashed #4b283b55}.lab{position:absolute;right:26px;width:78px;text-align:center;transform:translateY(-50%);color:#ff4fa8;font-size:28px;font-weight:900;letter-spacing:1px;transition:transform .22s ease,color .22s ease,text-shadow .22s ease}
-.lab.active{color:white;transform:translateY(-50%) scale(1.34);text-shadow:0 0 10px #fff,0 0 25px #ff3c9f}
-.dot{position:absolute;left:16%;top:50%;width:30px;height:30px;border-radius:50%;background:white;box-shadow:0 0 10px white,0 0 30px #ff3ca1;transform:translate(-50%,-50%);z-index:4}
-.wall{position:absolute;top:0;bottom:0;width:55px;background:linear-gradient(90deg,#9d145d,#ff3199,#8e0d53);box-shadow:0 0 22px #a10b5d;z-index:3}.gap{position:absolute;left:-2px;width:59px;background:#070306}
-.msg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#050405e8;font-size:100px;font-weight:bold;z-index:10}.mic{position:absolute;right:18px;bottom:16px;padding:12px;background:#ff3199;color:white;border:0;border-radius:10px;font-weight:bold;z-index:12}
-.target{position:absolute;top:18px;left:50%;transform:translateX(-50%);font-size:24px;font-weight:800;color:#b99aaa;z-index:6}.target b{font-size:42px;color:#ff55ae;margin-left:8px}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#020203;color:#fff;font-family:Arial,sans-serif}
+.stage{height:100vh;padding:24px 34px 30px;background:radial-gradient(circle at 48% 44%,#130711 0,#060306 38%,#020203 72%);display:flex;flex-direction:column}
+.hud{height:92px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;position:relative;z-index:20}
+.brand{font-size:31px;font-weight:900;letter-spacing:2.8px;text-transform:uppercase}.brand span{color:#ff4fa8}
+.centerHud{text-align:center}.participant{font-size:15px;color:#9f8997;font-weight:800;letter-spacing:1.6px}.targetTitle{margin-top:5px;font-size:16px;color:#d7c7d0;font-weight:800;letter-spacing:1px}.targetTitle b{color:#ff55ad;font-size:30px;margin-left:8px}
+.stats{display:flex;justify-content:flex-end;gap:12px}.pill{min-width:132px;padding:11px 16px;border:1px solid #4b263c;background:#0c070b;border-radius:12px;text-align:center}.pill small{display:block;color:#9f8997;font-size:11px;font-weight:900;letter-spacing:1.5px}.pill strong{display:block;margin-top:3px;font-size:25px;color:#fff}.pill strong.pink{color:#ff55ad}
+.game{position:relative;flex:1;min-height:0;border:1px solid #3b1d30;border-radius:18px;overflow:hidden;background:linear-gradient(90deg,#030203,#080407 48%,#030203)}
+.vignette{position:absolute;inset:0;box-shadow:inset 0 0 100px #000;pointer-events:none;z-index:12}
+.motion{position:absolute;inset:0;overflow:hidden;opacity:.72}
+.motion:before,.motion:after{content:"";position:absolute;inset:-10% -60%;background:
+radial-gradient(circle,#ff5caf88 0 1px,transparent 2px) 0 0/150px 95px,
+linear-gradient(90deg,transparent 0 86%,#ff4fa820 87% 88%,transparent 89%) 0 0/220px 100%;
+animation:bgmove 20s linear infinite}
+.motion:after{opacity:.28;filter:blur(.4px);background-size:260px 155px,390px 100%;animation-duration:34s;transform:translateX(18%)}
+@keyframes bgmove{to{transform:translateX(-32%)}}
+.guide{position:absolute;left:0;right:116px;border-top:1px solid #7e3d6350;z-index:1}
+.guide:after{content:"";position:absolute;left:0;right:0;top:-1px;border-top:1px dashed #ff55aa1f}
+.noteLabel{position:absolute;right:24px;width:78px;text-align:center;transform:translateY(-50%);font-size:26px;font-weight:900;letter-spacing:1.5px;color:#ff4fa8;transition:transform .24s ease,color .24s ease,text-shadow .24s ease;z-index:9}
+.noteLabel.active{color:#fff;transform:translateY(-50%) scale(1.38);text-shadow:0 0 8px #fff,0 0 24px #ff4fa8,0 0 42px #ff2e96}
+.dot{position:absolute;left:17%;top:50%;width:28px;height:28px;border-radius:50%;background:#fff;border:5px solid #ff58ae;box-shadow:0 0 8px #fff,0 0 22px #ff4fa8,0 0 46px #ff2e96;transform:translate(-50%,-50%);z-index:8}
+.trail{position:absolute;left:4%;width:13%;height:2px;background:linear-gradient(90deg,transparent,#ff4fa844,#ff6ab6aa);top:50%;transform:translateY(-50%);filter:blur(.2px);z-index:5}
+.wallPart{position:absolute;width:52px;background:linear-gradient(90deg,#541333,#ff3f9d 48%,#7c174c);border:1px solid #ff71ba;box-shadow:0 0 14px #ff2e9688,0 0 34px #ff2e9638;z-index:7}
+.wallCap{position:absolute;left:-8px;right:-8px;height:5px;background:#ff8bc7;box-shadow:0 0 14px #ff4fa8}
+#wallTop .wallCap{bottom:0}#wallBottom .wallCap{top:0}
+.msg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#030203e8;font-size:84px;font-weight:900;letter-spacing:2px;z-index:30}
+.mic{position:absolute;right:18px;bottom:16px;padding:12px 16px;background:#ff3199;color:#fff;border:0;border-radius:10px;font-weight:900;z-index:40}
 </style>
-<main class=w><div class=top><div class=title>ТОЧНО В НОТУ</div><div id=who class=who></div><div class=stat><b id=sc>0</b> СТЕН &nbsp;·&nbsp; <b id=tm>01:00</b></div></div>
-<div id=game class=game><div class=bg></div><div id=lines></div><div class=target>НОТА <b id=note>DO</b></div><div id=wall class=wall><div id=gap class=gap></div></div><div id=dot class=dot></div><div id=msg class=msg>ОЖИДАНИЕ</div><button id=mic class=mic>ПОДКЛЮЧИТЬ МИКРОФОН</button></div></main>
+<main class=stage>
+ <header class=hud>
+  <div class=brand>ТОЧНО <span>В НОТУ</span></div>
+  <div class=centerHud><div id=who class=participant></div><div class=targetTitle>НУЖНА НОТА <b id=note>DO</b></div></div>
+  <div class=stats><div class=pill><small>ВРЕМЯ</small><strong id=tm>01:00</strong></div><div class=pill><small>СЧЁТ</small><strong id=sc class=pink>0</strong></div></div>
+ </header>
+ <section id=game class=game>
+  <div class=motion></div><div id=lines></div><div id=trail class=trail></div><div id=dot class=dot></div>
+  <div id=wallTop class=wallPart><i class=wallCap></i></div><div id=wallBottom class=wallPart><i class=wallCap></i></div>
+  <div class=vignette></div><div id=msg class=msg>ОЖИДАНИЕ</div><button id=mic class=mic>ПОДКЛЮЧИТЬ МИКРОФОН</button>
+ </section>
+</main>
 <script>
-const NS=["DO","RE","MI","FA","SOL","LA","TI"],$=x=>document.querySelector(x);let st,ctx,an,b,sr=48000,sm=3,targetPos=3,micOK=false,S=null,x=.84,mode="in",lt=performance.now(),hitting=false,pitchHist=[],passed=false;
-function ty(i){return 12+i*(76/6)}
-$("#lines").innerHTML=NS.map((n,i)=>`<div class=line style="top:${ty(i)}%"></div><div class=lab id=l${i} style="top:${ty(i)}%">${n}</div>`).join("");
+const NS=["DO","RE","MI","FA","SOL","LA","TI"],$=x=>document.querySelector(x);
+let st,ctx,an,b,sr=48000,sm=3,targetPos=3,micOK=false,S=null,x=.84,mode="in",lt=performance.now(),hitting=false,pitchHist=[];
+/* Высокие ноты сверху, низкие снизу: TI ... DO */
+function ty(i){return 88-i*(76/6)}
+$("#lines").innerHTML=NS.map((n,i)=>`<div class=guide style="top:${ty(i)}%"></div><div class=noteLabel id=l${i} style="top:${ty(i)}%">${n}</div>`).join("");
 async function audio(){try{let id=localStorage.getItem("voiceMeterDevice");st=await navigator.mediaDevices.getUserMedia({audio:{deviceId:id?{exact:id}:undefined,echoCancellation:false,noiseSuppression:false,autoGainControl:false}});ctx=new AudioContext();sr=ctx.sampleRate;an=ctx.createAnalyser();an.fftSize=4096;an.smoothingTimeConstant=.15;b=new Float32Array(an.fftSize);ctx.createMediaStreamSource(st).connect(an);micOK=true;$("#mic").style.display="none";listen()}catch(e){$("#mic").textContent="РАЗРЕШИТЬ МИКРОФОН"}}
 $("#mic").onclick=audio;
 function pitch(a){let mean=0;for(let v of a)mean+=v;mean/=a.length;let rms=0;for(let v of a){let q=v-mean;rms+=q*q}rms=Math.sqrt(rms/a.length);if(rms<.007)return null;const minF=65,maxF=700,lo=Math.max(2,Math.floor(sr/maxF)),hi=Math.min(Math.floor(sr/minF),Math.floor(a.length*.48));let corr=new Float32Array(hi+1),best=0;for(let l=lo;l<=hi;l++){let xy=0,xx=0,yy=0,n=a.length-l;for(let i=0;i<n;i++){let xxv=a[i]-mean,yyv=a[i+l]-mean;xy+=xxv*yyv;xx+=xxv*xxv;yy+=yyv*yyv}let c=xy/Math.sqrt(xx*yy+1e-12);corr[l]=c;if(c>best)best=c}if(best<.55)return null;let lag=0,gate=Math.max(.58,best*.90);for(let l=lo+1;l<hi;l++)if(corr[l]>=gate&&corr[l]>=corr[l-1]&&corr[l]>=corr[l+1]){lag=l;break}if(!lag){for(let l=lo;l<=hi;l++)if(corr[l]===best){lag=l;break}}if(lag>lo&&lag<hi){let a1=corr[lag-1],a2=corr[lag],a3=corr[lag+1],d=a1-2*a2+a3;if(Math.abs(d)>1e-6)lag+=.5*(a1-a3)/d}let f=sr/lag;if(f<minF||f>maxF)return null;return 69+12*Math.log2(f/440)}
-const pcs=[0,2,4,5,7,9,11];function notePos(m){let pc=((Math.round(m)-60)%12+12)%12,best=0,bd=99;pcs.forEach((v,i)=>{let d=Math.min(Math.abs(pc-v),12-Math.abs(pc-v));if(d<bd){bd=d;best=i}});return best}
-function active(i){document.querySelectorAll(".lab").forEach((e,j)=>e.classList.toggle("active",j===i))}
-function listen(){an.getFloatTimeDomainData(b);let m=pitch(b);if(m!=null){let p=notePos(m);pitchHist.push(p);if(pitchHist.length>5)pitchHist.shift();let z=[...pitchHist].sort((a,b)=>a-b);targetPos=z[Math.floor(z.length/2)];active(targetPos)}sm+=(targetPos-sm)*.075;$("#dot").style.top=ty(sm)+"%";requestAnimationFrame(listen)}
-function reset(){x=.84;mode="in";hitting=false;passed=false}
-async function hit(){if(hitting)return;hitting=true;passed=true;mode="pass";try{await fetch("/api/hit",{method:"POST",headers:{"Content-Type":"application/json"},body:"{}",cache:"no-store"})}catch(e){}}
-function anim(t){let dt=Math.min(.05,(t-lt)/1000);lt=t;if(S&&S.phase==="play"){let target=ty(S.note_i);$("#gap").style.top=(target-7.5)+"%";$("#gap").style.height="15%";if(mode==="in")x-=dt*.19;else if(mode==="out"){x+=dt*.34;if(x>=.72)mode="in"}else if(mode==="pass"){x-=dt*.24;if(x<-.08)reset()}let wx=x*$("#game").clientWidth,dx=.16*$("#game").clientWidth;if(mode==="in"&&wx<=dx+28){if(micOK&&Math.abs(ty(sm)-target)<=7)hit();else mode="out"}$("#wall").style.left=x*100+"%"}requestAnimationFrame(anim)}requestAnimationFrame(anim);
-function draw(s){let phaseChanged=!S||S.phase!==s.phase;S=s;$("#who").textContent=s.name;$("#note").textContent=s.note;$("#sc").textContent=s.score;let q=Math.ceil(s.remaining);$("#tm").textContent=q>=60?"01:00":"00:"+String(q).padStart(2,"0");if(s.phase==="play"){$("#msg").style.display="none";if(phaseChanged)reset()}else{$("#msg").style.display="flex";$("#msg").textContent=s.phase==="prep"?Math.max(1,Math.ceil(s.remaining)):s.phase==="ready"?"ГОТОВ":s.phase==="timeup"?"ВРЕМЯ!":s.phase==="finished"?"ФИНИШ":"ОЖИДАНИЕ"}}
+const pcs=[0,2,4,5,7,9,11];
+function notePos(m){let pc=((Math.round(m)-60)%12+12)%12,best=0,bd=99;pcs.forEach((v,i)=>{let d=Math.min(Math.abs(pc-v),12-Math.abs(pc-v));if(d<bd){bd=d;best=i}});return best}
+function active(i){document.querySelectorAll(".noteLabel").forEach((e,j)=>e.classList.toggle("active",j===i))}
+function listen(){an.getFloatTimeDomainData(b);let m=pitch(b);if(m!=null){let p=notePos(m);pitchHist.push(p);if(pitchHist.length>5)pitchHist.shift();let z=[...pitchHist].sort((a,b)=>a-b);targetPos=z[Math.floor(z.length/2)];active(targetPos)}sm+=(targetPos-sm)*.075;let y=ty(sm);$("#dot").style.top=y+"%";$("#trail").style.top=y+"%";requestAnimationFrame(listen)}
+function setWallGap(noteIndex){let y=ty(noteIndex),half=7.5;$("#wallTop").style.top="0";$("#wallTop").style.height=Math.max(0,y-half)+"%";$("#wallBottom").style.top=(y+half)+"%";$("#wallBottom").style.bottom="0";$("#wallBottom").style.height="auto"}
+function resetWall(){x=.84;mode="in";hitting=false}
+async function hit(){if(hitting)return;hitting=true;mode="pass";try{await fetch("/api/hit",{method:"POST",headers:{"Content-Type":"application/json"},body:"{}",cache:"no-store"})}catch(e){}}
+function moveWall(){let left=x*100+"%";$("#wallTop").style.left=left;$("#wallBottom").style.left=left}
+function anim(t){let dt=Math.min(.05,(t-lt)/1000);lt=t;if(S&&S.phase==="play"){let target=ty(S.note_i);setWallGap(S.note_i);if(mode==="in")x-=dt*.19;else if(mode==="out"){x+=dt*.34;if(x>=.72)mode="in"}else if(mode==="pass"){x-=dt*.24;if(x<-.08)resetWall()}let wx=x*$("#game").clientWidth,dx=.17*$("#game").clientWidth;if(mode==="in"&&wx<=dx+28){if(micOK&&Math.abs(ty(sm)-target)<=7)hit();else mode="out"}moveWall()}requestAnimationFrame(anim)}requestAnimationFrame(anim);
+function draw(s){let phaseChanged=!S||S.phase!==s.phase;S=s;$("#who").textContent=s.name||"";$("#note").textContent=s.note;$("#sc").textContent=s.score;let q=Math.max(0,Math.ceil(s.remaining));$("#tm").textContent=q>=60?"01:00":"00:"+String(q).padStart(2,"0");if(s.phase==="play"){$("#msg").style.display="none";if(phaseChanged)resetWall()}else{$("#msg").style.display="flex";$("#msg").textContent=s.phase==="prep"?Math.max(1,Math.ceil(s.remaining)):s.phase==="ready"?"ГОТОВ":s.phase==="timeup"?"ВРЕМЯ!":s.phase==="finished"?"ФИНИШ":"ОЖИДАНИЕ"}}
 setInterval(async()=>{try{draw(await fetch("/api/state?_="+Date.now(),{cache:"no-store"}).then(x=>x.json()))}catch(e){}},120);audio()
 </script>"""
