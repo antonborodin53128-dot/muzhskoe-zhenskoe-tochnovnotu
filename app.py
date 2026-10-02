@@ -115,7 +115,7 @@ SCREEN=r"""<!doctype html><meta charset=utf-8><meta name=viewport content="width
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#020203;color:#fff;font-family:Arial,sans-serif}
 .stage{height:100vh;padding:24px 34px 30px;background:radial-gradient(circle at 48% 44%,#130711 0,#060306 38%,#020203 72%);display:flex;flex-direction:column}
 .hud{height:92px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;position:relative;z-index:20}
-.brand{display:inline-block;width:max-content;padding:7px 15px 8px;border-top:2px solid #ff4fa8;border-bottom:2px solid #ff4fa8;font-family:"Arial Black",Arial,sans-serif;font-size:37px;font-weight:900;letter-spacing:1px;line-height:1;text-transform:uppercase;text-shadow:0 2px 0 #4b1735,0 0 18px #ff3c9935}.brand:before,.brand:after{content:"◆";color:#ff4fa8;font-size:13px;vertical-align:middle;margin:0 9px}.brand span{color:#ff4fa8;text-shadow:0 0 12px #ff3c9970}
+.brand{position:relative;display:inline-block;width:max-content;padding:10px 21px 11px;border:2px solid #ff4fa8;background:#090509a8;font-family:"Arial Black",Arial,sans-serif;font-size:37px;font-weight:900;letter-spacing:1px;line-height:1;text-transform:uppercase;text-shadow:0 2px 0 #4b1735,0 0 18px #ff3c9935;box-shadow:inset 0 0 18px #ff3c9915,0 0 14px #ff3c9922}.brand:before,.brand:after{content:"";position:absolute;top:8px;bottom:8px;width:7px;border-top:2px solid #fff;border-bottom:2px solid #fff}.brand:before{left:-5px;border-left:2px solid #fff}.brand:after{right:-5px;border-right:2px solid #fff}.brand span{color:#ff4fa8;text-shadow:0 0 12px #ff3c9970}
 .centerHud{text-align:center}.participant{font-size:15px;color:#9f8997;font-weight:800;letter-spacing:1.6px}.targetTitle{margin-top:5px;font-size:16px;color:#d7c7d0;font-weight:800;letter-spacing:1px}.targetTitle b{color:#ff55ad;font-size:30px;margin-left:8px}
 .stats{display:flex;justify-content:flex-end;gap:12px}.pill{min-width:132px;padding:11px 16px;border:1px solid #4b263c;background:#0c070b;border-radius:12px;text-align:center}.pill small{display:block;color:#9f8997;font-size:11px;font-weight:900;letter-spacing:1.5px}.pill strong{display:block;margin-top:3px;font-size:25px;color:#fff}.pill strong.pink{color:#ff55ad}
 .game{position:relative;flex:1;min-height:0;border:1px solid #3b1d30;border-radius:18px;overflow:hidden;background:linear-gradient(90deg,#030203,#080407 48%,#030203)}
@@ -132,7 +132,7 @@ animation:bgloop 22s linear infinite;will-change:transform}
 .noteLabel{position:absolute;right:24px;width:78px;text-align:center;transform:translateY(-50%);font-size:26px;font-weight:900;letter-spacing:1.5px;color:#ff4fa8;transition:transform .24s ease,color .24s ease,text-shadow .24s ease;z-index:9}
 .noteLabel.active{color:#fff;transform:translateY(-50%) scale(1.38);text-shadow:0 0 8px #fff,0 0 24px #ff4fa8,0 0 42px #ff2e96}
 .dot{position:absolute;left:17%;top:50%;width:28px;height:28px;border-radius:50%;background:#fff;border:5px solid #ff58ae;box-shadow:0 0 8px #fff,0 0 22px #ff4fa8,0 0 46px #ff2e96;transform:translate(-50%,-50%);z-index:8}
-.trail{position:absolute;left:3%;width:14%;height:54px;top:50%;transform:translateY(-50%);z-index:5;overflow:visible}.trail path{fill:none;stroke:#ff58ae;stroke-width:2.3;filter:drop-shadow(0 0 5px #ff3c99);stroke-linecap:round}
+.trail{position:absolute;left:2%;width:15%;height:62px;top:50%;transform:translateY(-50%);z-index:5;overflow:visible;filter:drop-shadow(0 0 5px #ff3c99)}.trail path{fill:none;stroke:url(#tailFade);stroke-width:2.8;stroke-linecap:round}
 .wallPart{position:absolute;width:68px;background:repeating-linear-gradient(0deg,#140912 0 22px,#26101e 23px 25px);border-left:2px solid #ff4fa8;border-right:2px solid #ff4fa8;box-shadow:inset 0 0 20px #ff3c9924,0 0 16px #ff2e9655;z-index:7}.wallPart:after{content:"";position:absolute;inset:8px 11px;border-left:1px solid #ff67b044;border-right:1px solid #ff67b044}.wallCap{position:absolute;left:-10px;right:-10px;height:8px;background:#120910;border:2px solid #ff75bb;box-shadow:0 0 12px #ff4fa8,0 0 28px #ff2e9660}
 #wallTop .wallCap{bottom:0}#wallBottom .wallCap{top:0}
 .msg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#030203e8;font-size:84px;font-weight:900;letter-spacing:2px;z-index:30}
@@ -145,30 +145,48 @@ animation:bgloop 22s linear infinite;will-change:transform}
   <div class=stats><div class=pill><small>ВРЕМЯ</small><strong id=tm>01:00</strong></div><div class=pill><small>СЧЁТ</small><strong id=sc class=pink>0</strong></div></div>
  </header>
  <section id=game class=game>
-  <div class=motion></div><div id=lines></div><svg id=trail class=trail viewBox="0 0 260 54" preserveAspectRatio="none" aria-hidden="true"><path id=wave d=""></path></svg><div id=dot class=dot></div>
+  <div class=motion></div><div id=lines></div><svg id=trail class=trail viewBox="0 0 300 62" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id=tailFade x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#ff58ae" stop-opacity="0"/><stop offset="35%" stop-color="#ff58ae" stop-opacity=".15"/><stop offset="72%" stop-color="#ff70bd" stop-opacity=".58"/><stop offset="100%" stop-color="#fff" stop-opacity=".95"/></linearGradient></defs><path id=wave d=""></path></svg><div id=dot class=dot></div>
   <div id=wallTop class=wallPart><i class=wallCap></i></div><div id=wallBottom class=wallPart><i class=wallCap></i></div>
   <div class=vignette></div><div id=msg class=msg>ОЖИДАНИЕ</div><button id=mic class=mic>ПОДКЛЮЧИТЬ МИКРОФОН</button>
  </section>
 </main>
 <script>
 const NS=["DO","RE","MI","FA","SOL","LA","TI"],$=x=>document.querySelector(x);
-let st,ctx,an,b,sr=48000,sm=3,targetPos=3,micOK=false,S=null,x=.84,mode="in",lt=performance.now(),hitting=false,pitchHist=[],wallNote=0,wavePhase=0;
+let st,ctx,an,b,sr=48000,sm=-1,targetPos=-1,micOK=false,S=null,x=.84,mode="in",lt=performance.now(),hitting=false,pitchHist=[],wallNote=0,wavePhase=0,lastVoice=0,lastMidi=null;
 /* Высокие ноты сверху, низкие снизу: TI ... DO */
 function ty(i){return 88-i*(76/6)}
 $("#lines").innerHTML=NS.map((n,i)=>`<div class=guide style="top:${ty(i)}%"></div><div class=noteLabel id=l${i} style="top:${ty(i)}%">${n}</div>`).join("");
 async function audio(){try{let id=localStorage.getItem("voiceMeterDevice");st=await navigator.mediaDevices.getUserMedia({audio:{deviceId:id?{exact:id}:undefined,echoCancellation:false,noiseSuppression:false,autoGainControl:false}});ctx=new AudioContext();sr=ctx.sampleRate;an=ctx.createAnalyser();an.fftSize=4096;an.smoothingTimeConstant=.15;b=new Float32Array(an.fftSize);ctx.createMediaStreamSource(st).connect(an);micOK=true;$("#mic").style.display="none";listen()}catch(e){$("#mic").textContent="РАЗРЕШИТЬ МИКРОФОН"}}
 $("#mic").onclick=audio;
-function pitch(a){let mean=0;for(let v of a)mean+=v;mean/=a.length;let rms=0;for(let v of a){let q=v-mean;rms+=q*q}rms=Math.sqrt(rms/a.length);if(rms<.007)return null;const minF=65,maxF=700,lo=Math.max(2,Math.floor(sr/maxF)),hi=Math.min(Math.floor(sr/minF),Math.floor(a.length*.48));let corr=new Float32Array(hi+1),best=0;for(let l=lo;l<=hi;l++){let xy=0,xx=0,yy=0,n=a.length-l;for(let i=0;i<n;i++){let xxv=a[i]-mean,yyv=a[i+l]-mean;xy+=xxv*yyv;xx+=xxv*xxv;yy+=yyv*yyv}let c=xy/Math.sqrt(xx*yy+1e-12);corr[l]=c;if(c>best)best=c}if(best<.55)return null;let lag=0,gate=Math.max(.58,best*.90);for(let l=lo+1;l<hi;l++)if(corr[l]>=gate&&corr[l]>=corr[l-1]&&corr[l]>=corr[l+1]){lag=l;break}if(!lag){for(let l=lo;l<=hi;l++)if(corr[l]===best){lag=l;break}}if(lag>lo&&lag<hi){let a1=corr[lag-1],a2=corr[lag],a3=corr[lag+1],d=a1-2*a2+a3;if(Math.abs(d)>1e-6)lag+=.5*(a1-a3)/d}let f=sr/lag;if(f<minF||f>maxF)return null;return 69+12*Math.log2(f/440)}
+function pitch(a){let mean=0;for(let v of a)mean+=v;mean/=a.length;let rms=0;for(let v of a){let q=v-mean;rms+=q*q}rms=Math.sqrt(rms/a.length);if(rms<.006)return null;const minF=65,maxF=700,lo=Math.max(2,Math.floor(sr/maxF)),hi=Math.min(Math.floor(sr/minF),Math.floor(a.length*.48));let corr=new Float32Array(hi+1),best=0;for(let l=lo;l<=hi;l++){let xy=0,xx=0,yy=0,n=a.length-l;for(let i=0;i<n;i++){let xxv=a[i]-mean,yyv=a[i+l]-mean;xy+=xxv*yyv;xx+=xxv*xxv;yy+=yyv*yyv}let c=xy/Math.sqrt(xx*yy+1e-12);corr[l]=c;if(c>best)best=c}if(best<.60)return null;let lag=0,gate=Math.max(.64,best*.92);for(let l=lo+1;l<hi;l++)if(corr[l]>=gate&&corr[l]>=corr[l-1]&&corr[l]>=corr[l+1]){lag=l;break}if(!lag){for(let l=lo;l<=hi;l++)if(corr[l]===best){lag=l;break}}if(lag>lo&&lag<hi){let a1=corr[lag-1],a2=corr[lag],a3=corr[lag+1],d=a1-2*a2+a3;if(Math.abs(d)>1e-6)lag+=.5*(a1-a3)/d}let f=sr/lag;if(f<minF||f>maxF)return null;return 69+12*Math.log2(f/440)}
 const pcs=[0,2,4,5,7,9,11];
-function notePos(m){let pc=((m-60)%12+12)%12,best=0,bd=99;pcs.forEach((v,i)=>{let d=Math.min(Math.abs(pc-v),12-Math.abs(pc-v));if(d<bd){bd=d;best=i}});/* TI/B sits next to the octave boundary; give its upper half a stable capture zone */if(pc>=10.35&&pc<=11.85)best=6;return best}
+function continuousPos(m){
+ let pc=((m%12)+12)%12,c=pc;
+ if(c>11.55)c=11.55;
+ const a=[[0,0],[2,1],[4,2],[5,3],[7,4],[9,5],[11,6]];
+ for(let k=0;k<a.length-1;k++){let x=a[k],y=a[k+1];if(c>=x[0]&&c<=y[0])return x[1]+(c-x[0])/(y[0]-x[0])*(y[1]-x[1])}
+ return 6
+}
+function nearestNatural(m){let pc=((m%12)+12)%12,best=0,bd=99;pcs.forEach((v,i)=>{let d=Math.min(Math.abs(pc-v),12-Math.abs(pc-v));if(d<bd){bd=d;best=i}});return{i:best,d:bd}}
 function active(i){document.querySelectorAll(".noteLabel").forEach((e,j)=>e.classList.toggle("active",j===i))}
-function listen(){an.getFloatTimeDomainData(b);let m=pitch(b);if(m!=null){let p=notePos(m);pitchHist.push(p);if(pitchHist.length>5)pitchHist.shift();let z=[...pitchHist].sort((a,b)=>a-b);targetPos=z[Math.floor(z.length/2)];active(targetPos)}sm+=(targetPos-sm)*.075;let y=ty(sm);$("#dot").style.top=y+"%";$("#trail").style.top=y+"%";requestAnimationFrame(listen)}
+function listen(){
+ an.getFloatTimeDomainData(b);let m=pitch(b),now=performance.now();
+ if(m!=null){
+   if(lastMidi!=null){while(m-lastMidi>7)m-=12;while(lastMidi-m>7)m+=12}
+   lastMidi=m;lastVoice=now;
+   let p=continuousPos(m);pitchHist.push(p);if(pitchHist.length>5)pitchHist.shift();
+   let z=[...pitchHist].sort((a,b)=>a-b);targetPos=z[Math.floor(z.length/2)];
+   let nn=nearestNatural(m);active(nn.d<=.72?nn.i:-1)
+ }else if(now-lastVoice>180){targetPos=-1.05;lastMidi=null;pitchHist.length=0;active(-1)}
+ let voiced=(now-lastVoice)<=180;sm+=(targetPos-sm)*(voiced?.105:.16);
+ let y=ty(sm);$("#dot").style.top=y+"%";$("#trail").style.top=y+"%";requestAnimationFrame(listen)
+}
 function setWallGap(noteIndex){let y=ty(noteIndex),half=7.5;$("#wallTop").style.top="0";$("#wallTop").style.height=Math.max(0,y-half)+"%";$("#wallBottom").style.top=(y+half)+"%";$("#wallBottom").style.bottom="0";$("#wallBottom").style.height="auto"}
 function resetWall(){x=.84;mode="in";hitting=false;wallNote=S?S.note_i:0;setWallGap(wallNote)}
 async function hit(){if(hitting)return;hitting=true;mode="pass";try{await fetch("/api/hit",{method:"POST",headers:{"Content-Type":"application/json"},body:"{}",cache:"no-store"})}catch(e){}}
 function moveWall(){let left=x*100+"%";$("#wallTop").style.left=left;$("#wallBottom").style.left=left}
-function drawWave(dt){wavePhase+=dt*3.6;let d="";for(let px=0;px<=260;px+=5){let fade=px/260,amp=7+6*fade,y=27+Math.sin(px*.038-wavePhase)*amp;d+=(px?" L":"M")+px.toFixed(1)+" "+y.toFixed(1)}$("#wave").setAttribute("d",d)}
-function anim(t){let dt=Math.min(.05,(t-lt)/1000);lt=t;drawWave(dt);if(S&&S.phase==="play"){let target=ty(wallNote);if(mode==="in")x-=dt*.19;else if(mode==="out"){x+=dt*.34;if(x>=.72)mode="in"}else if(mode==="pass"){x-=dt*.24;if(x<-.10)resetWall()}let wx=x*$("#game").clientWidth,dx=.17*$("#game").clientWidth;if(mode==="in"&&wx<=dx+28){if(micOK&&Math.abs(ty(sm)-target)<=7)hit();else mode="out"}moveWall()}requestAnimationFrame(anim)}requestAnimationFrame(anim);
+function drawWave(dt){wavePhase+=dt*2.7;let d="";for(let px=0;px<=300;px+=5){let t=px/300,amp=10*(1-t)+2.2*t,y=31+Math.sin(px*.034-wavePhase)*amp;d+=(px?" L":"M")+px.toFixed(1)+" "+y.toFixed(1)}$("#wave").setAttribute("d",d)}
+function anim(t){let dt=Math.min(.05,(t-lt)/1000);lt=t;drawWave(dt);if(S&&S.phase==="play"){let target=ty(wallNote);if(mode==="in")x-=dt*.19;else if(mode==="out"){x+=dt*.34;if(x>=.72)mode="in"}else if(mode==="pass"){x-=dt*.24;if(x<-.10)resetWall()}let wx=x*$("#game").clientWidth,dx=.17*$("#game").clientWidth;if(mode==="in"&&wx<=dx+28){if(micOK&&(performance.now()-lastVoice)<=180&&Math.abs(ty(sm)-target)<=7)hit();else mode="out"}moveWall()}requestAnimationFrame(anim)}requestAnimationFrame(anim);
 function draw(s){let phaseChanged=!S||S.phase!==s.phase;S=s;$("#who").textContent=s.name||"";$("#note").textContent=s.note;$("#sc").textContent=s.score;let q=Math.max(0,Math.ceil(s.remaining));$("#tm").textContent=q>=60?"01:00":"00:"+String(q).padStart(2,"0");if(s.phase==="play"){$("#msg").style.display="none";if(phaseChanged)resetWall()}else{$("#msg").style.display="flex";$("#msg").textContent=s.phase==="prep"?Math.max(1,Math.ceil(s.remaining)):s.phase==="ready"?"ГОТОВ":s.phase==="timeup"?"ВРЕМЯ!":s.phase==="finished"?"ФИНИШ":"ОЖИДАНИЕ"}}
 setInterval(async()=>{try{draw(await fetch("/api/state?_="+Date.now(),{cache:"no-store"}).then(x=>x.json()))}catch(e){}},120);audio()
 </script>"""
