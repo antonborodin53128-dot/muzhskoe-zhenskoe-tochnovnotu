@@ -1,4 +1,4 @@
-NOTE WALLS v1
+ТОЧНО В НОТУ v1
 /setup — microphone
 /screen — audience/game
 /control — host
