@@ -123,7 +123,7 @@ radial-gradient(ellipse at 70% 28%,#8a18533d 0,transparent 26%),
 radial-gradient(ellipse at 48% 72%,#d32b7b24 0,transparent 30%),
 radial-gradient(ellipse at 25% 42%,#50134732 0,transparent 24%),
 linear-gradient(90deg,#010106,#07030b 48%,#010106)}
-.game:before{content:"✦  ·    ✧       ✦    ·   ✧      ·     ✦        ✧   ·";position:absolute;left:6%;top:14%;right:5%;color:#fff;font-size:18px;letter-spacing:34px;white-space:nowrap;opacity:.62;text-shadow:0 0 7px #fff,0 0 13px #ff9dce;z-index:2;animation:twinkle 2.6s ease-in-out infinite alternate}.game:after{content:"·      ✧    ·       ✦       ·    ✧       ·";position:absolute;left:15%;top:68%;color:#ffd9ee;font-size:13px;letter-spacing:43px;white-space:nowrap;opacity:.45;text-shadow:0 0 7px #fff;z-index:2;animation:twinkle 3.8s ease-in-out infinite alternate-reverse}@keyframes twinkle{to{opacity:.9;filter:brightness(1.35)}}.vignette{position:absolute;inset:0;box-shadow:inset 0 0 100px #000;pointer-events:none;z-index:12}
+}#stars{position:absolute;inset:0;width:100%;height:100%;z-index:2;opacity:.92;pointer-events:none}.vignette{position:absolute;inset:0;box-shadow:inset 0 0 100px #000;pointer-events:none;z-index:12}
 .motion{position:absolute;inset:0;overflow:hidden;background:#010106}
 .motion:before{content:"";position:absolute;left:0;top:0;width:200%;height:100%;will-change:transform;animation:spaceLoop 46s linear infinite;background:
 radial-gradient(circle at 4% 17%,#fff 0 1px,#fff0 2px),
@@ -146,15 +146,24 @@ radial-gradient(ellipse at 54% 68%,#ff398f70 0 7%,#8d1e6650 18%,transparent 32%)
 radial-gradient(ellipse at 74% 31%,#c62c8268 0 8%,#6f1d6650 19%,transparent 35%),
 radial-gradient(ellipse at 91% 61%,#ff4b9e66 0 7%,#841c5b4d 17%,transparent 31%)}
 @keyframes spaceLoop{from{transform:translateX(0)}to{transform:translateX(-50%)}}to{transform:translateX(-50%)}}to{transform:translateX(-50%)}}
-.guide{position:absolute;left:0;right:116px;border-top:1px solid #7e3d6350;z-index:1}
-.guide:after{content:"";position:absolute;left:0;right:0;top:-1px;border-top:1px dashed #ff55aa1f}
-.noteLabel{position:absolute;right:24px;width:78px;text-align:center;transform:translateY(-50%);font-size:26px;font-weight:900;letter-spacing:1.5px;color:#ff4fa8;transition:transform .24s ease,color .24s ease,text-shadow .24s ease;z-index:9}
+.guide{position:absolute;left:0;right:0;border-top:1px solid #ff78bc45;z-index:4;pointer-events:none;box-shadow:0 -1px 0 #ffffff08}
+.guide:after{content:"";position:absolute;left:0;right:0;top:-1px;border-top:1px dashed #ffffff12}
+.noteLabel{position:absolute;right:24px;width:78px;text-align:center;transform:translateY(-50%);font-size:26px;font-weight:900;letter-spacing:1.5px;color:#ff4fa8;transition:transform .24s ease,color .24s ease,text-shadow .24s ease;z-index:14}
 .noteLabel.active{color:#fff;transform:translateY(-50%) scale(1.72);text-shadow:0 0 8px #fff,0 0 18px #fff,0 0 34px #ff5aad,0 0 65px #ff2e96;z-index:15}
 .dot{position:absolute;left:17%;top:50%;width:34px;height:34px;border-radius:50%;transform:translate(-50%,-50%);z-index:9;background:radial-gradient(circle at 38% 32%,#fff 0 12%,#ffd4eb 13% 25%,#ff5aad 40%,#b51f6c 72%,#430b2b 100%);border:1px solid #ff9dce;box-shadow:0 0 8px #fff,0 0 20px #ff5aad,0 0 45px #ff2e9675;animation:orbPulse 1.1s ease-in-out infinite alternate}.dot:before{content:"";position:absolute;inset:-7px;border-radius:50%;border:1px solid #ff79bd55}.dot:after{content:"";position:absolute;inset:-13px;border-radius:50%;border:1px solid #ff4fa825}@keyframes orbPulse{to{filter:brightness(1.18);box-shadow:0 0 10px #fff,0 0 25px #ff5aad,0 0 55px #ff2e9685}}}
 .trail{position:absolute;left:2%;width:15%;height:76px;top:50%;transform:translateY(-50%);z-index:8;overflow:visible;pointer-events:none}.trail path{fill:none;stroke-linecap:round}.trail .main{stroke-width:2.3}.trail .sub{stroke-width:1.2;opacity:.58}.trail .pulse{stroke-width:.9;opacity:.34}
 .wallPart{position:absolute;width:68px;background:repeating-linear-gradient(0deg,#140912 0 22px,#26101e 23px 25px);border-left:2px solid #ff4fa8;border-right:2px solid #ff4fa8;box-shadow:inset 0 0 20px #ff3c9924,0 0 16px #ff2e9655;z-index:7}.wallPart:after{content:"";position:absolute;inset:8px 11px;border-left:1px solid #ff67b044;border-right:1px solid #ff67b044}.wallCap{position:absolute;left:-10px;right:-10px;height:8px;background:#120910;border:2px solid #ff75bb;box-shadow:0 0 12px #ff4fa8,0 0 28px #ff2e9660}
 #wallTop .wallCap{bottom:0}#wallBottom .wallCap{top:0}
-.msg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#020207e8;font-family:"Arial Black",Arial,sans-serif;font-size:112px;font-weight:900;letter-spacing:4px;z-index:30;text-shadow:0 0 10px #fff,0 0 32px #ff4fa8,0 0 70px #ff2e96;transition:transform .14s,opacity .14s}.msg.tick{animation:countTick .82s cubic-bezier(.2,.8,.2,1)}@keyframes countTick{0%{transform:scale(1.8);opacity:0}25%{transform:scale(1);opacity:1}75%{transform:scale(1);opacity:1}100%{transform:scale(.72);opacity:.15}}
+.msg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at center,#10061088 0,#02020722 28%,transparent 58%);z-index:30;pointer-events:none}
+.msg .countHud{position:relative;width:220px;height:220px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid #ff6ab655;box-shadow:0 0 35px #ff2e9625,inset 0 0 30px #ff2e9614}
+.msg .countHud:before{content:"";position:absolute;inset:14px;border-radius:50%;border:3px dashed #ff63b2aa;animation:ringSpin 3.4s linear infinite}
+.msg .countHud:after{content:"";position:absolute;inset:-15px;border-radius:50%;border-top:2px solid #fff;border-right:2px solid #ff4fa8;border-bottom:2px solid transparent;border-left:2px solid transparent;filter:drop-shadow(0 0 7px #ff4fa8);animation:ringSpin 1.9s linear infinite reverse}
+.countNum{font-family:"Arial Black",Arial,sans-serif;font-size:104px;font-weight:900;line-height:1;color:#fff;text-shadow:0 0 9px #fff,0 0 24px #ff5aad,0 0 52px #ff2e9685;animation:numEnter .72s cubic-bezier(.16,.84,.22,1)}
+.countLabel{position:absolute;bottom:45px;font-size:10px;font-weight:900;letter-spacing:4px;color:#ff8bc7}
+.countSide{position:absolute;left:50%;top:50%;width:300px;height:1px;transform:translate(-50%,-50%);background:linear-gradient(90deg,transparent,#ff4fa855 18%,transparent 38%,transparent 62%,#ff4fa855 82%,transparent)}
+.countSide:before,.countSide:after{content:"";position:absolute;top:-3px;width:7px;height:7px;background:#ff67b4;box-shadow:0 0 10px #ff4fa8;transform:rotate(45deg)}.countSide:before{left:36px}.countSide:after{right:36px}
+@keyframes ringSpin{to{transform:rotate(360deg)}}@keyframes numEnter{0%{transform:scale(.25);opacity:0;filter:blur(14px)}28%{transform:scale(1.16);opacity:1;filter:blur(0)}62%{transform:scale(1)}100%{transform:scale(.82);opacity:.25;filter:blur(4px)}}
+@keyframes startFlash{0%{transform:scale(.55);opacity:0}30%{transform:scale(1.08);opacity:1}100%{transform:scale(1);opacity:1}}25%{transform:scale(1);opacity:1}75%{transform:scale(1);opacity:1}100%{transform:scale(.72);opacity:.15}}
 .mic{position:absolute;right:18px;bottom:16px;padding:12px 16px;background:#ff3199;color:#fff;border:0;border-radius:10px;font-weight:900;z-index:40}
 </style>
 <main class=stage>
@@ -164,17 +173,37 @@ radial-gradient(ellipse at 91% 61%,#ff4b9e66 0 7%,#841c5b4d 17%,transparent 31%)
   <div class=stats><div class=pill><small>ВРЕМЯ</small><strong id=tm>01:00</strong></div><div class=pill><small>СЧЁТ</small><strong id=sc class=pink>0</strong></div></div>
  </header>
  <section id=game class=game>
-  <div class=motion></div><div id=lines></div><svg id=trail class=trail viewBox="0 0 300 72" preserveAspectRatio="none" aria-hidden="true">
+  <div class=motion></div><canvas id=stars></canvas><div id=lines></div><svg id=trail class=trail viewBox="0 0 300 72" preserveAspectRatio="none" aria-hidden="true">
 <defs>
 <linearGradient id="fadeTrail" x1="0" x2="1"><stop offset="0" stop-color="#ff4fa8" stop-opacity="0"/><stop offset=".34" stop-color="#ff4fa8" stop-opacity=".12"/><stop offset=".72" stop-color="#ff5aad" stop-opacity=".58"/><stop offset="1" stop-color="#ffd1e8" stop-opacity=".95"/></linearGradient>
 <linearGradient id="fadeTrail2" x1="0" x2="1"><stop offset="0" stop-color="#ff4fa8" stop-opacity="0"/><stop offset=".48" stop-color="#ff4fa8" stop-opacity=".08"/><stop offset="1" stop-color="#ff5aad" stop-opacity=".55"/></linearGradient>
 </defs>
 <path id=waveSub class=sub stroke="url(#fadeTrail2)" d=""></path><path id=wave class=main stroke="url(#fadeTrail)" d=""></path><path id=wavePulse class=pulse stroke="url(#fadeTrail2)" d=""></path></svg><div id=dot class=dot></div>
   <div id=wallTop class=wallPart><i class=wallCap></i></div><div id=wallBottom class=wallPart><i class=wallCap></i></div>
-  <div class=vignette></div><div id=msg class=msg>ОЖИДАНИЕ</div><button id=mic class=mic>ПОДКЛЮЧИТЬ МИКРОФОН</button>
+  <div class=vignette></div><div id=msg class=msg></div><button id=mic class=mic>ПОДКЛЮЧИТЬ МИКРОФОН</button>
  </section>
 </main>
 <script>
+const starCanvas=document.getElementById("stars"),sx=starCanvas.getContext("2d");
+let starPts=[],starOff=0;
+function initStars(){
+ let d=devicePixelRatio||1,w=starCanvas.clientWidth,h=starCanvas.clientHeight;
+ starCanvas.width=w*d;starCanvas.height=h*d;sx.setTransform(d,0,0,d,0,0);
+ starPts=[];let seed=92731;
+ const rnd=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296};
+ for(let i=0;i<155;i++)starPts.push({x:rnd()*w,y:rnd()*h,r:.35+rnd()*1.45,a:.28+rnd()*.72,t:rnd()*6.28});
+}
+function drawStars(t){
+ let w=starCanvas.clientWidth,h=starCanvas.clientHeight;starOff=(t*.004)%w;
+ sx.clearRect(0,0,w,h);
+ for(let q of starPts){
+   let x=(q.x-starOff+w)%w,tw=.72+.28*Math.sin(t*.0018+q.t);
+   sx.globalAlpha=q.a*tw;sx.fillStyle="#fff";sx.beginPath();sx.arc(x,q.y,q.r,0,Math.PI*2);sx.fill();
+   if(q.r>1.35){sx.globalAlpha=q.a*.45*tw;sx.strokeStyle="#ffd9ee";sx.lineWidth=.55;sx.beginPath();sx.moveTo(x-4*q.r,q.y);sx.lineTo(x+4*q.r,q.y);sx.moveTo(x,q.y-4*q.r);sx.lineTo(x,q.y+4*q.r);sx.stroke()}
+ }
+ requestAnimationFrame(drawStars)
+}
+addEventListener("resize",initStars);initStars();requestAnimationFrame(drawStars);
 const NS=["DO","RE","MI","FA","SOL","LA","TI"],$=x=>document.querySelector(x);
 let st,ctx,an,b,sr=48000,sm=3,targetPos=3,micOK=false,S=null,x=.84,mode="in",lt=performance.now(),hitting=false,pitchHist=[],wallNote=0,wavePhase=0,lastVoice=0;
 /* Высокие ноты сверху, низкие снизу: TI ... DO */
@@ -212,6 +241,14 @@ function drawWave(dt){
  $("#wave").setAttribute("d",a);$("#waveSub").setAttribute("d",b);$("#wavePulse").setAttribute("d",c);
 }
 function anim(t){let dt=Math.min(.05,(t-lt)/1000);lt=t;drawWave(dt);if(S&&S.phase==="play"){let target=ty(wallNote);if(mode==="in")x-=dt*.19;else if(mode==="out"){x+=dt*.34;if(x>=.72)mode="in"}else if(mode==="pass"){x-=dt*.24;if(x<-.10)resetWall()}let wx=x*$("#game").clientWidth,dx=.17*$("#game").clientWidth;if(mode==="in"&&wx<=dx+28){if(micOK&&(performance.now()-lastVoice)<260&&Math.abs(ty(sm)-target)<=7)hit();else mode="out"}moveWall()}requestAnimationFrame(anim)}requestAnimationFrame(anim);
-let lastCount="";function draw(s){let phaseChanged=!S||S.phase!==s.phase;S=s;$("#who").textContent=s.name||"";$("#note").textContent=s.note;$("#sc").textContent=s.score;let q=Math.max(0,Math.ceil(s.remaining));$("#tm").textContent=q>=60?"01:00":"00:"+String(q).padStart(2,"0");if(s.phase==="play"){$("#msg").style.display="none";if(phaseChanged)resetWall()}else{$("#msg").style.display="flex";let txt=s.phase==="prep"?String(Math.max(1,Math.ceil(s.remaining))):s.phase==="ready"?"ГОТОВ":s.phase==="timeup"?"ВРЕМЯ!":s.phase==="finished"?"ФИНИШ":"ОЖИДАНИЕ";$("#msg").textContent=txt;if(s.phase==="prep"&&txt!==lastCount){$("#msg").classList.remove("tick");void $("#msg").offsetWidth;$("#msg").classList.add("tick");lastCount=txt}}}
+let lastCount="";function draw(s){let phaseChanged=!S||S.phase!==s.phase;S=s;$("#who").textContent=s.name||"";$("#note").textContent=s.note;$("#sc").textContent=s.score;let q=Math.max(0,Math.ceil(s.remaining));$("#tm").textContent=q>=60?"01:00":"00:"+String(q).padStart(2,"0");if(s.phase==="play"){$("#msg").style.display="none";if(phaseChanged)resetWall()}else{$("#msg").style.display="flex";let txt=s.phase==="prep"?String(Math.max(1,Math.ceil(s.remaining))):s.phase==="ready"?"ГОТОВ":s.phase==="timeup"?"ВРЕМЯ!":s.phase==="finished"?"ФИНИШ":"ОЖИДАНИЕ";
+if(s.phase==="prep"){
+ if(txt!==lastCount){
+   $("#msg").innerHTML='<div class="countSide"></div><div class="countHud"><div class="countNum">'+txt+'</div><div class="countLabel">SYSTEM // READY</div></div>';
+   lastCount=txt;
+ }
+}else{
+ $("#msg").innerHTML='<div class="countHud"><div class="countNum" style="font-size:'+(txt.length>3?'35px':'70px')+';animation:startFlash .45s ease-out">'+txt+'</div><div class="countLabel">ТОЧНО В НОТУ</div></div>';
+}}}
 setInterval(async()=>{try{draw(await fetch("/api/state?_="+Date.now(),{cache:"no-store"}).then(x=>x.json()))}catch(e){}},120);audio()
 </script>"""
