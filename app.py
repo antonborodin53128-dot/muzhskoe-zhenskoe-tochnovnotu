@@ -61,8 +61,7 @@ def finish():
 def reset():
  with lock:G.update(ps=[],i=-1,phase="idle",started=None,score=0,hit=0);return jsonify(snap())
 
-SETUP=r'''<!doctype html><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>SETUP</title><style>body{background:#050405;color:white;font:18px Arial;max-width:760px;margin:40px auto;padding:20px}button,select{font:inherit;padding:14px;margin:8px;background:#21101d;color:white;border:1px solid #ff3c9f;border-radius:12px}select{width:100%}#bar{height:18px;background:#26101e;border-radius:10px;overflow:hidden}#fill{height:100%;width:0;background:#ff3c9f}a{color:#ff70bf}
-</style><h1>НАСТРОЙКА МИКРОФОНА</h1><button id=a>РАЗРЕШИТЬ МИКРОФОН</button><select id=d><option>Выберите микрофон</option></select><p id=s>Не подключён</p><div id=bar><div id=fill></div></div><p><a href=/screen target=_blank>ЭКРАН ИГРЫ</a> · <a href=/control target=_blank>ПУЛЬТ</a></p><script>
+SETUP=r'''<!doctype html><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>SETUP</title><style>body{background:#050405;color:white;font:18px Arial;max-width:760px;margin:40px auto;padding:20px}button,select{font:inherit;padding:14px;margin:8px;background:#21101d;color:white;border:1px solid #ff3c9f;border-radius:12px}select{width:100%}#bar{height:18px;background:#26101e;border-radius:10px;overflow:hidden}#fill{height:100%;width:0;background:#ff3c9f}a{color:#ff70bf}</style><h1>НАСТРОЙКА МИКРОФОНА</h1><button id=a>РАЗРЕШИТЬ МИКРОФОН</button><select id=d><option>Выберите микрофон</option></select><p id=s>Не подключён</p><div id=bar><div id=fill></div></div><p><a href=/screen target=_blank>ЭКРАН ИГРЫ</a> · <a href=/control target=_blank>ПУЛЬТ</a></p><script>
 let st,c,an,b;const d=document.querySelector("#d"),s=document.querySelector("#s"),f=document.querySelector("#fill");
 async function list(){let q=(await navigator.mediaDevices.enumerateDevices()).filter(x=>x.kind==="audioinput"),sv=localStorage.getItem("voiceMeterDevice");d.innerHTML="";q.forEach((x,i)=>{let o=document.createElement("option");o.value=x.deviceId;o.textContent=x.label||"Аудиовход "+(i+1);if(sv===x.deviceId)o.selected=true;d.appendChild(o)})}
 async function go(id){try{if(st)st.getTracks().forEach(x=>x.stop());st=await navigator.mediaDevices.getUserMedia({audio:{deviceId:id?{exact:id}:undefined,echoCancellation:false,noiseSuppression:false,autoGainControl:false}});let z=st.getAudioTracks()[0].getSettings();if(z.deviceId)localStorage.setItem("voiceMeterDevice",z.deviceId);await list();d.value=z.deviceId;c=new AudioContext();an=c.createAnalyser();an.fftSize=1024;b=new Float32Array(an.fftSize);c.createMediaStreamSource(st).connect(an);s.textContent="МИКРОФОН ПОДКЛЮЧЁН";tick()}catch(e){s.textContent="РАЗРЕШИТЕ ДОСТУП К МИКРОФОНУ"}}
@@ -116,191 +115,60 @@ SCREEN=r"""<!doctype html><meta charset=utf-8><meta name=viewport content="width
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#020203;color:#fff;font-family:Arial,sans-serif}
 .stage{height:100vh;padding:24px 34px 30px;background:radial-gradient(circle at 48% 44%,#130711 0,#060306 38%,#020203 72%);display:flex;flex-direction:column}
 .hud{height:92px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;position:relative;z-index:20}
-.brand{position:relative;display:inline-flex;align-items:center;width:max-content;padding:12px 20px 11px;border:1px solid #ff5aad;background:linear-gradient(180deg,#160914cc,#08050acc);font-family:"Arial Black",Arial,sans-serif;font-size:36px;font-weight:900;letter-spacing:2.5px;line-height:1;text-transform:uppercase;color:#fff;box-shadow:inset 0 0 22px #ff3c9915,0 0 18px #ff3c9925}.brand:before,.brand:after{content:"";position:absolute;width:18px;height:5px;background:#ff5aad;box-shadow:0 0 10px #ff5aad}.brand:before{left:-1px;top:-3px}.brand:after{right:-1px;bottom:-3px}.brand span{color:#ff62b2;margin-left:10px;text-shadow:0 0 10px #ff58ae,0 0 24px #ff2e9670}
+.brand{display:inline-block;width:max-content;padding:7px 15px 8px;border-top:2px solid #ff4fa8;border-bottom:2px solid #ff4fa8;font-family:"Arial Black",Arial,sans-serif;font-size:37px;font-weight:900;letter-spacing:1px;line-height:1;text-transform:uppercase;text-shadow:0 2px 0 #4b1735,0 0 18px #ff3c9935}.brand:before,.brand:after{content:"◆";color:#ff4fa8;font-size:13px;vertical-align:middle;margin:0 9px}.brand span{color:#ff4fa8;text-shadow:0 0 12px #ff3c9970}
 .centerHud{text-align:center}.participant{font-size:15px;color:#9f8997;font-weight:800;letter-spacing:1.6px}.targetTitle{margin-top:5px;font-size:16px;color:#d7c7d0;font-weight:800;letter-spacing:1px}.targetTitle b{color:#ff55ad;font-size:30px;margin-left:8px}
 .stats{display:flex;justify-content:flex-end;gap:12px}.pill{min-width:132px;padding:11px 16px;border:1px solid #4b263c;background:#0c070b;border-radius:12px;text-align:center}.pill small{display:block;color:#9f8997;font-size:11px;font-weight:900;letter-spacing:1.5px}.pill strong{display:block;margin-top:3px;font-size:25px;color:#fff}.pill strong.pink{color:#ff55ad}
-.game{position:relative;flex:1;min-height:0;border:1px solid #3b1d30;border-radius:14px;overflow:hidden;background:
-radial-gradient(ellipse at 70% 28%,#8a18533d 0,transparent 26%),
-radial-gradient(ellipse at 48% 72%,#d32b7b24 0,transparent 30%),
-radial-gradient(ellipse at 25% 42%,#50134732 0,transparent 24%),
-linear-gradient(90deg,#010106,#07030b 48%,#010106)}
-}#stars{position:absolute;inset:0;width:100%;height:100%;z-index:2;opacity:.92;pointer-events:none}.vignette{position:absolute;inset:0;box-shadow:inset 0 0 100px #000;pointer-events:none;z-index:12}
-.motion{position:absolute;inset:0;overflow:hidden;background:#010106}
-.motion:before{content:"";position:absolute;left:0;top:0;width:200%;height:100%;will-change:transform;animation:spaceLoop 46s linear infinite;background:
-radial-gradient(circle at 4% 17%,#fff 0 1px,#fff0 2px),
-radial-gradient(circle at 13% 68%,#fff 0 1.5px,#fff0 2.8px),
-radial-gradient(circle at 23% 31%,#ffd8ef 0 1px,#fff0 2px),
-radial-gradient(circle at 31% 82%,#fff 0 2px,#fff0 3.5px),
-radial-gradient(circle at 43% 12%,#fff 0 1px,#fff0 2px),
-radial-gradient(circle at 56% 57%,#ffb6dc 0 1.4px,#fff0 2.7px),
-radial-gradient(circle at 67% 24%,#fff 0 1.8px,#fff0 3px),
-radial-gradient(circle at 79% 75%,#fff 0 1px,#fff0 2px),
-radial-gradient(circle at 91% 39%,#ffd4eb 0 1.5px,#fff0 2.8px),
-radial-gradient(ellipse at 18% 44%,#ff3e9a50 0 5%,#8e1d6840 13%,transparent 29%),
-radial-gradient(ellipse at 31% 57%,#d62d8050 0 7%,#6f185238 18%,transparent 33%),
-radial-gradient(ellipse at 67% 34%,#ff4ca557 0 5%,#91226438 16%,transparent 31%),
-radial-gradient(ellipse at 82% 63%,#ba26714d 0 8%,#54134235 20%,transparent 35%)}
-.motion:after{content:"";position:absolute;left:0;top:-12%;width:200%;height:124%;will-change:transform;animation:spaceLoop 72s linear infinite;filter:blur(24px);opacity:.82;background:
-radial-gradient(ellipse at 12% 48%,#ff4fa87a 0 6%,#b42a7460 14%,transparent 30%),
-radial-gradient(ellipse at 27% 38%,#7b246f72 0 8%,#d02c7a4f 18%,transparent 34%),
-radial-gradient(ellipse at 54% 68%,#ff398f70 0 7%,#8d1e6650 18%,transparent 32%),
-radial-gradient(ellipse at 74% 31%,#c62c8268 0 8%,#6f1d6650 19%,transparent 35%),
-radial-gradient(ellipse at 91% 61%,#ff4b9e66 0 7%,#841c5b4d 17%,transparent 31%)}
-@keyframes spaceLoop{from{transform:translateX(0)}to{transform:translateX(-50%)}}to{transform:translateX(-50%)}}to{transform:translateX(-50%)}}
-.guide{position:absolute;left:0;right:0;border-top:1px solid #ff78bc45;z-index:4;pointer-events:none;box-shadow:0 -1px 0 #ffffff08}
-.guide:after{content:"";position:absolute;left:0;right:0;top:-1px;border-top:1px dashed #ffffff12}
-.noteLabel{position:absolute;right:24px;width:78px;text-align:center;transform:translateY(-50%);font-size:26px;font-weight:900;letter-spacing:1.5px;color:#ff4fa8;transition:transform .24s ease,color .24s ease,text-shadow .24s ease;z-index:14}
-.noteLabel.active{color:#fff;transform:translateY(-50%) scale(1.72);text-shadow:0 0 8px #fff,0 0 18px #fff,0 0 34px #ff5aad,0 0 65px #ff2e96;z-index:15}
-.dot{position:absolute;left:17%;top:50%;width:34px;height:34px;border-radius:50%;transform:translate(-50%,-50%);z-index:9;background:radial-gradient(circle at 38% 32%,#fff 0 12%,#ffd4eb 13% 25%,#ff5aad 40%,#b51f6c 72%,#430b2b 100%);border:1px solid #ff9dce;box-shadow:0 0 8px #fff,0 0 20px #ff5aad,0 0 45px #ff2e9675;animation:orbPulse 1.1s ease-in-out infinite alternate}.dot:before{content:"";position:absolute;inset:-7px;border-radius:50%;border:1px solid #ff79bd55}.dot:after{content:"";position:absolute;inset:-13px;border-radius:50%;border:1px solid #ff4fa825}@keyframes orbPulse{to{filter:brightness(1.18);box-shadow:0 0 10px #fff,0 0 25px #ff5aad,0 0 55px #ff2e9685}}}
-.trail{position:absolute;left:2%;width:15%;height:76px;top:50%;transform:translateY(-50%);z-index:8;overflow:visible;pointer-events:none}.trail path{fill:none;stroke-linecap:round}.trail .main{stroke-width:2.3}.trail .sub{stroke-width:1.2;opacity:.58}.trail .pulse{stroke-width:.9;opacity:.34}
+.game{position:relative;flex:1;min-height:0;border:1px solid #3b1d30;border-radius:18px;overflow:hidden;background:linear-gradient(90deg,#030203,#080407 48%,#030203)}
+.vignette{position:absolute;inset:0;box-shadow:inset 0 0 100px #000;pointer-events:none;z-index:12}
+.motion{position:absolute;inset:0;overflow:hidden;opacity:.72}
+.motion:before,.motion:after{content:"";position:absolute;left:0;top:0;width:200%;height:100%;background:
+radial-gradient(circle,#ff5caf78 0 1px,transparent 2px) 0 0/150px 95px,
+linear-gradient(90deg,transparent 0 86%,#ff4fa81d 87% 88%,transparent 89%) 0 0/220px 100%;
+animation:bgloop 22s linear infinite;will-change:transform}
+.motion:after{opacity:.24;filter:blur(.5px);background-size:260px 155px,390px 100%;animation-duration:38s}
+@keyframes bgloop{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.guide{position:absolute;left:0;right:116px;border-top:1px solid #7e3d6350;z-index:1}
+.guide:after{content:"";position:absolute;left:0;right:0;top:-1px;border-top:1px dashed #ff55aa1f}
+.noteLabel{position:absolute;right:24px;width:78px;text-align:center;transform:translateY(-50%);font-size:26px;font-weight:900;letter-spacing:1.5px;color:#ff4fa8;transition:transform .24s ease,color .24s ease,text-shadow .24s ease;z-index:9}
+.noteLabel.active{color:#fff;transform:translateY(-50%) scale(1.38);text-shadow:0 0 8px #fff,0 0 24px #ff4fa8,0 0 42px #ff2e96}
+.dot{position:absolute;left:17%;top:50%;width:28px;height:28px;border-radius:50%;background:#fff;border:5px solid #ff58ae;box-shadow:0 0 8px #fff,0 0 22px #ff4fa8,0 0 46px #ff2e96;transform:translate(-50%,-50%);z-index:8}
+.trail{position:absolute;left:3%;width:14%;height:54px;top:50%;transform:translateY(-50%);z-index:5;overflow:visible}.trail path{fill:none;stroke:#ff58ae;stroke-width:2.3;filter:drop-shadow(0 0 5px #ff3c99);stroke-linecap:round}
 .wallPart{position:absolute;width:68px;background:repeating-linear-gradient(0deg,#140912 0 22px,#26101e 23px 25px);border-left:2px solid #ff4fa8;border-right:2px solid #ff4fa8;box-shadow:inset 0 0 20px #ff3c9924,0 0 16px #ff2e9655;z-index:7}.wallPart:after{content:"";position:absolute;inset:8px 11px;border-left:1px solid #ff67b044;border-right:1px solid #ff67b044}.wallCap{position:absolute;left:-10px;right:-10px;height:8px;background:#120910;border:2px solid #ff75bb;box-shadow:0 0 12px #ff4fa8,0 0 28px #ff2e9660}
 #wallTop .wallCap{bottom:0}#wallBottom .wallCap{top:0}
-.msg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at center,#10061088 0,#02020722 28%,transparent 58%);z-index:30;pointer-events:none}
-.msg .countHud{position:relative;width:220px;height:220px;display:flex;align-items:center;justify-content:center;border-radius:50%;border:1px solid #ff6ab655;box-shadow:0 0 35px #ff2e9625,inset 0 0 30px #ff2e9614}
-.msg .countHud:before{content:"";position:absolute;inset:14px;border-radius:50%;border:3px dashed #ff63b2aa;animation:ringSpin 3.4s linear infinite}
-.msg .countHud:after{content:"";position:absolute;inset:-15px;border-radius:50%;border-top:2px solid #fff;border-right:2px solid #ff4fa8;border-bottom:2px solid transparent;border-left:2px solid transparent;filter:drop-shadow(0 0 7px #ff4fa8);animation:ringSpin 1.9s linear infinite reverse}
-.countNum{font-family:"Arial Black",Arial,sans-serif;font-size:104px;font-weight:900;line-height:1;color:#fff;text-shadow:0 0 9px #fff,0 0 24px #ff5aad,0 0 52px #ff2e9685;animation:numEnter .72s cubic-bezier(.16,.84,.22,1)}
-.countLabel{position:absolute;bottom:45px;font-size:10px;font-weight:900;letter-spacing:4px;color:#ff8bc7}
-.countSide{position:absolute;left:50%;top:50%;width:300px;height:1px;transform:translate(-50%,-50%);background:linear-gradient(90deg,transparent,#ff4fa855 18%,transparent 38%,transparent 62%,#ff4fa855 82%,transparent)}
-.countSide:before,.countSide:after{content:"";position:absolute;top:-3px;width:7px;height:7px;background:#ff67b4;box-shadow:0 0 10px #ff4fa8;transform:rotate(45deg)}.countSide:before{left:36px}.countSide:after{right:36px}
-@keyframes ringSpin{to{transform:rotate(360deg)}}@keyframes numEnter{0%{transform:scale(.25);opacity:0;filter:blur(14px)}28%{transform:scale(1.16);opacity:1;filter:blur(0)}62%{transform:scale(1)}100%{transform:scale(.82);opacity:.25;filter:blur(4px)}}
-@keyframes startFlash{0%{transform:scale(.55);opacity:0}30%{transform:scale(1.08);opacity:1}100%{transform:scale(1);opacity:1}}25%{transform:scale(1);opacity:1}75%{transform:scale(1);opacity:1}100%{transform:scale(.72);opacity:.15}}
+.msg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#030203e8;font-size:84px;font-weight:900;letter-spacing:2px;z-index:30}
 .mic{position:absolute;right:18px;bottom:16px;padding:12px 16px;background:#ff3199;color:#fff;border:0;border-radius:10px;font-weight:900;z-index:40}
-
-/* ===== CONCERT STAGE V14 — REAL SCREEN OVERRIDE ===== */
-.stage{padding:18px 22px 22px!important;background:#020205!important}
-.hud{height:96px!important;grid-template-columns:1.25fr .9fr 1.1fr!important}
-.brand{padding:13px 25px!important;background:#0a0810!important;border:1px solid #ff3da4!important;border-radius:0!important;clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%)!important;font-size:35px!important;box-shadow:0 0 24px #ff2f9525!important}
-.brand:before{left:0!important;top:0!important;width:5px!important;height:100%!important}
-.brand:after{right:0!important;bottom:0!important;width:40%!important;height:2px!important}
-.pill{border-radius:2px!important;border-color:#4d2940!important;background:#09080e!important}
-.game{border-radius:2px!important;border:1px solid #ff3fa74d!important;background:radial-gradient(ellipse at 50% 105%,#6c1646 0,#251027 25%,#09070f 55%,#010103 100%)!important;box-shadow:inset 0 0 100px #000,0 0 28px #ff2f9417!important;perspective:900px!important}
-.motion{display:none!important}
-#stars{display:none!important}
-.vignette{z-index:12!important;box-shadow:inset 0 0 100px #000b!important}
-.lights{display:block!important;position:absolute;inset:0;z-index:2;overflow:hidden;pointer-events:none}
-.beam{display:block!important;position:absolute;top:-15%;width:16%;height:125%;opacity:.28;filter:blur(9px);transform-origin:50% 0;clip-path:polygon(46% 0,54% 0,100% 100%,0 100%);background:linear-gradient(#ff9bd000,#ff5ab65e 10%,#ff35922b 58%,transparent 85%);animation:sweepV14 6s ease-in-out infinite alternate}
-.b1{left:6%;animation-delay:-1s}.b2{left:29%;animation-delay:-3s;background:linear-gradient(#b18cff00,#9a6aff50,transparent)}.b3{right:28%;animation-delay:-4.5s}.b4{right:5%;animation-delay:-2s;background:linear-gradient(#b18cff00,#805cff48,transparent)}
-@keyframes sweepV14{from{transform:rotate(-14deg)}to{transform:rotate(14deg)}}
-.concertFloor{display:block!important;position:absolute;left:-16%;right:-16%;bottom:-24%;height:68%;z-index:3;transform:perspective(520px) rotateX(64deg);transform-origin:bottom;background:repeating-linear-gradient(90deg,transparent 0 8%,#ff3ca82d 8.15% 8.3%,transparent 8.45% 16%),repeating-linear-gradient(0deg,transparent 0 44px,#ff3ca82b 45px,#fff1 46px,transparent 47px 90px);mask-image:linear-gradient(to top,#000 20%,#000b 55%,transparent);animation:floorV14 1.8s linear infinite}
-@keyframes floorV14{to{background-position:0 90px}}
-#concertFx{display:block!important;position:absolute;inset:0;width:100%;height:100%;z-index:5;pointer-events:none}
-
-/* Seven note lanes, explicitly full width */
-#lines{position:absolute!important;inset:0!important;z-index:8!important;pointer-events:none!important}
-.guide{position:absolute!important;left:0!important;right:0!important;width:100%!important;height:2px!important;border:0!important;background:linear-gradient(90deg,#ff45a91c,#ff58b55f 14%,#ff75c074 78%,#ff45a925)!important;box-shadow:0 0 7px #ff3ca846!important}
-.guide:after{content:""!important;position:absolute!important;inset:0!important;border-top:1px dashed #fff3!important}
-#noteLabels{position:absolute!important;inset:0!important;z-index:18!important;pointer-events:none!important}
-.noteLabel{right:18px!important;width:68px!important;padding:6px 0!important;background:#05050adf!important;border:1px solid #ff54af70!important;border-radius:2px!important;font-size:20px!important;color:#ff63b8!important}
-.noteLabel.active{color:#090309!important;background:#fff!important;border-color:#fff!important;transform:translateY(-50%) scale(1.6)!important;text-shadow:none!important;box-shadow:0 0 12px #fff,0 0 34px #ff3ca8!important}
-
-/* New player */
-.dot{width:40px!important;height:40px!important;z-index:16!important;background:radial-gradient(circle at 36% 32%,#fff 0 10%,#ffd8ed 16%,#ff62b9 35%,#ff218f 60%,#5d1039 100%)!important;border:2px solid #fff!important;box-shadow:0 0 10px #fff,0 0 24px #ff4eaf,0 0 55px #ff208e!important}
-.dot:before{inset:-9px!important;border:1px solid #ff7ac477!important;animation:ringV14 2s linear infinite}.dot:after{display:block!important;content:""!important;position:absolute!important;inset:-16px!important;border-radius:50%!important;border:1px dashed #fff4!important;animation:ringV14 3.2s linear infinite reverse!important}
-@keyframes ringV14{to{transform:rotate(360deg)}}
-.trail{z-index:15!important;filter:drop-shadow(0 0 5px #ff3ca8)!important}.trail .main{stroke-width:3!important}.trail .sub{stroke-width:1.5!important}.trail .pulse{stroke-width:1!important}
-
-/* New concert-truss wall */
-.wallPart{width:74px!important;z-index:14!important;background:linear-gradient(90deg,#07070b,#292733 14%,#0b0b10 22%,#15151d 78%,#2c2936 86%,#07070b)!important;border:1px solid #77717e!important;border-left:4px solid #ff3da4!important;border-right:4px solid #ff3da4!important;box-shadow:0 0 22px #000,inset 0 0 18px #000!important}
-.wallPart:after{content:""!important;position:absolute!important;inset:9px 13px!important;border:1px solid #55525d!important;background:repeating-linear-gradient(0deg,#32313a 0 3px,#09090d 3px 8px)!important}
-.wallCap{left:-9px!important;right:-9px!important;height:8px!important;background:linear-gradient(90deg,#ff2992,#fff,#ff2992)!important;border:0!important;box-shadow:0 0 16px #ff3da4!important}
-
-/* Stage cue countdown */
-.msg{background:radial-gradient(circle,#ff2f8d1c,#020205df 60%)!important}
-.msg .countHud{width:215px!important;height:215px!important;border-radius:50%!important;background:#07060ce8!important;border:2px solid #ff50af!important;box-shadow:0 0 40px #ff2f9870,inset 0 0 45px #ff2f9820!important}
-.msg .countHud:before{inset:-13px!important;border-radius:50%!important;border:2px dashed #fff5!important;border-left-color:#ff3ba2!important;animation:ringV14 2s linear infinite!important}
-.msg .countHud:after{display:block!important;inset:18px!important;border-radius:50%!important;border-top:3px solid #fff!important;border-right:3px solid transparent!important;border-bottom:3px solid #ff3ba2!important;border-left:3px solid transparent!important;animation:ringV14 1.2s linear infinite reverse!important}
-.countNum{font-size:108px!important;text-shadow:0 0 12px #fff,0 0 32px #ff3ba2!important}
 </style>
-<style>#noteLabels{position:absolute;inset:0;z-index:17;pointer-events:none}</style><main class=stage>
+<main class=stage>
  <header class=hud>
   <div class=brand>ТОЧНО <span>В НОТУ</span></div>
   <div class=centerHud><div id=who class=participant></div><div class=targetTitle>НУЖНА НОТА <b id=note>DO</b></div></div>
   <div class=stats><div class=pill><small>ВРЕМЯ</small><strong id=tm>01:00</strong></div><div class=pill><small>СЧЁТ</small><strong id=sc class=pink>0</strong></div></div>
  </header>
  <section id=game class=game>
-  <div class=motion></div><div class="lights"><i class="beam b1"></i><i class="beam b2"></i><i class="beam b3"></i><i class="beam b4"></i></div><div class="concertFloor"></div><canvas id="concertFx"></canvas><canvas id=stars></canvas><div id=lines>
-<div class=guide style="top:12%"></div><div class=guide style="top:24.6667%"></div><div class=guide style="top:37.3333%"></div><div class=guide style="top:50%"></div><div class=guide style="top:62.6667%"></div><div class=guide style="top:75.3333%"></div><div class=guide style="top:88%"></div>
-</div><div id=noteLabels></div><svg id=trail class=trail viewBox="0 0 300 72" preserveAspectRatio="none" aria-hidden="true">
-<defs>
-<linearGradient id="fadeTrail" x1="0" x2="1"><stop offset="0" stop-color="#ff4fa8" stop-opacity="0"/><stop offset=".34" stop-color="#ff4fa8" stop-opacity=".12"/><stop offset=".72" stop-color="#ff5aad" stop-opacity=".58"/><stop offset="1" stop-color="#ffd1e8" stop-opacity=".95"/></linearGradient>
-<linearGradient id="fadeTrail2" x1="0" x2="1"><stop offset="0" stop-color="#ff4fa8" stop-opacity="0"/><stop offset=".48" stop-color="#ff4fa8" stop-opacity=".08"/><stop offset="1" stop-color="#ff5aad" stop-opacity=".55"/></linearGradient>
-</defs>
-<path id=waveSub class=sub stroke="url(#fadeTrail2)" d=""></path><path id=wave class=main stroke="url(#fadeTrail)" d=""></path><path id=wavePulse class=pulse stroke="url(#fadeTrail2)" d=""></path></svg><div id=dot class=dot></div>
+  <div class=motion></div><div id=lines></div><svg id=trail class=trail viewBox="0 0 260 54" preserveAspectRatio="none" aria-hidden="true"><path id=wave d=""></path></svg><div id=dot class=dot></div>
   <div id=wallTop class=wallPart><i class=wallCap></i></div><div id=wallBottom class=wallPart><i class=wallCap></i></div>
-  <div class=vignette></div><div id=msg class=msg></div><button id=mic class=mic>ПОДКЛЮЧИТЬ МИКРОФОН</button>
+  <div class=vignette></div><div id=msg class=msg>ОЖИДАНИЕ</div><button id=mic class=mic>ПОДКЛЮЧИТЬ МИКРОФОН</button>
  </section>
 </main>
 <script>
-const starCanvas=document.getElementById("stars"),sx=starCanvas.getContext("2d");
-let starPts=[],starOff=0;
-function initStars(){
- let d=devicePixelRatio||1,w=starCanvas.clientWidth,h=starCanvas.clientHeight;
- starCanvas.width=w*d;starCanvas.height=h*d;sx.setTransform(d,0,0,d,0,0);
- starPts=[];let seed=92731;
- const rnd=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296};
- for(let i=0;i<155;i++)starPts.push({x:rnd()*w,y:rnd()*h,r:.35+rnd()*1.45,a:.28+rnd()*.72,t:rnd()*6.28});
-}
-function drawStars(t){
- let w=starCanvas.clientWidth,h=starCanvas.clientHeight;starOff=(t*.004)%w;
- sx.clearRect(0,0,w,h);
- for(let q of starPts){
-   let x=(q.x-starOff+w)%w,tw=.72+.28*Math.sin(t*.0018+q.t);
-   sx.globalAlpha=q.a*tw;sx.fillStyle="#fff";sx.beginPath();sx.arc(x,q.y,q.r,0,Math.PI*2);sx.fill();
-   if(q.r>1.35){sx.globalAlpha=q.a*.45*tw;sx.strokeStyle="#ffd9ee";sx.lineWidth=.55;sx.beginPath();sx.moveTo(x-4*q.r,q.y);sx.lineTo(x+4*q.r,q.y);sx.moveTo(x,q.y-4*q.r);sx.lineTo(x,q.y+4*q.r);sx.stroke()}
- }
- requestAnimationFrame(drawStars)
-}
-addEventListener("resize",initStars);initStars();requestAnimationFrame(drawStars);
-const cfx=document.getElementById("concertFx"),cx=cfx.getContext("2d");let parts=[],cw=0,ch=0;
-function fxResize(){let d=devicePixelRatio||1;cw=cfx.clientWidth;ch=cfx.clientHeight;cfx.width=cw*d;cfx.height=ch*d;cx.setTransform(d,0,0,d,0,0);parts=Array.from({length:48},(_,i)=>({x:Math.random()*cw,y:Math.random()*ch,r:.5+Math.random()*1.5,v:.05+Math.random()*.16,a:.12+Math.random()*.38}))}
-function fxDraw(){cx.clearRect(0,0,cw,ch);for(let p of parts){p.x-=p.v;if(p.x<0)p.x=cw;cx.globalAlpha=p.a;cx.fillStyle="#ff8dcc";cx.beginPath();cx.arc(p.x,p.y,p.r,0,Math.PI*2);cx.fill()}requestAnimationFrame(fxDraw)}
-addEventListener("resize",fxResize);fxResize();requestAnimationFrame(fxDraw);
 const NS=["DO","RE","MI","FA","SOL","LA","TI"],$=x=>document.querySelector(x);
-let st,ctx,an,b,sr=48000,sm=3,targetPos=3,micOK=false,S=null,x=.84,mode="in",lt=performance.now(),hitting=false,pitchHist=[],wallNote=0,wavePhase=0,lastVoice=0;
+let st,ctx,an,b,sr=48000,sm=3,targetPos=3,micOK=false,S=null,x=.84,mode="in",lt=performance.now(),hitting=false,pitchHist=[],wallNote=0,wavePhase=0;
 /* Высокие ноты сверху, низкие снизу: TI ... DO */
 function ty(i){return 88-i*(76/6)}
-$("#noteLabels").innerHTML=NS.map((n,i)=>`<div class=noteLabel id=l${i} style="top:${ty(i)}%">${n}</div>`).join("");
+$("#lines").innerHTML=NS.map((n,i)=>`<div class=guide style="top:${ty(i)}%"></div><div class=noteLabel id=l${i} style="top:${ty(i)}%">${n}</div>`).join("");
 async function audio(){try{let id=localStorage.getItem("voiceMeterDevice");st=await navigator.mediaDevices.getUserMedia({audio:{deviceId:id?{exact:id}:undefined,echoCancellation:false,noiseSuppression:false,autoGainControl:false}});ctx=new AudioContext();sr=ctx.sampleRate;an=ctx.createAnalyser();an.fftSize=4096;an.smoothingTimeConstant=.15;b=new Float32Array(an.fftSize);ctx.createMediaStreamSource(st).connect(an);micOK=true;$("#mic").style.display="none";listen()}catch(e){$("#mic").textContent="РАЗРЕШИТЬ МИКРОФОН"}}
 $("#mic").onclick=audio;
 function pitch(a){let mean=0;for(let v of a)mean+=v;mean/=a.length;let rms=0;for(let v of a){let q=v-mean;rms+=q*q}rms=Math.sqrt(rms/a.length);if(rms<.007)return null;const minF=65,maxF=700,lo=Math.max(2,Math.floor(sr/maxF)),hi=Math.min(Math.floor(sr/minF),Math.floor(a.length*.48));let corr=new Float32Array(hi+1),best=0;for(let l=lo;l<=hi;l++){let xy=0,xx=0,yy=0,n=a.length-l;for(let i=0;i<n;i++){let xxv=a[i]-mean,yyv=a[i+l]-mean;xy+=xxv*yyv;xx+=xxv*xxv;yy+=yyv*yyv}let c=xy/Math.sqrt(xx*yy+1e-12);corr[l]=c;if(c>best)best=c}if(best<.55)return null;let lag=0,gate=Math.max(.58,best*.90);for(let l=lo+1;l<hi;l++)if(corr[l]>=gate&&corr[l]>=corr[l-1]&&corr[l]>=corr[l+1]){lag=l;break}if(!lag){for(let l=lo;l<=hi;l++)if(corr[l]===best){lag=l;break}}if(lag>lo&&lag<hi){let a1=corr[lag-1],a2=corr[lag],a3=corr[lag+1],d=a1-2*a2+a3;if(Math.abs(d)>1e-6)lag+=.5*(a1-a3)/d}let f=sr/lag;if(f<minF||f>maxF)return null;return 69+12*Math.log2(f/440)}
 const pcs=[0,2,4,5,7,9,11];
 function notePos(m){let pc=((m-60)%12+12)%12,best=0,bd=99;pcs.forEach((v,i)=>{let d=Math.min(Math.abs(pc-v),12-Math.abs(pc-v));if(d<bd){bd=d;best=i}});/* TI/B sits next to the octave boundary; give its upper half a stable capture zone */if(pc>=10.35&&pc<=11.85)best=6;return best}
 function active(i){document.querySelectorAll(".noteLabel").forEach((e,j)=>e.classList.toggle("active",j===i))}
-function listen(){an.getFloatTimeDomainData(b);let m=pitch(b);if(m!=null){lastVoice=performance.now();let p=notePos(m);pitchHist.push(p);if(pitchHist.length>5)pitchHist.shift();let z=[...pitchHist].sort((a,b)=>a-b);targetPos=z[Math.floor(z.length/2)];active(targetPos)}if(performance.now()-lastVoice>260){
-  /* no confirmed voice: move away from the wall gap so silence can never coast through */
-  let avoid=(S&&S.phase==="play")?S.note_i:3;
-  targetPos=avoid>=3?0:6;
-  active(-1);
-}
-sm+=(targetPos-sm)*.075;let y=ty(sm);$("#dot").style.top=y+"%";$("#trail").style.top=y+"%";requestAnimationFrame(listen)}
+function listen(){an.getFloatTimeDomainData(b);let m=pitch(b);if(m!=null){let p=notePos(m);pitchHist.push(p);if(pitchHist.length>5)pitchHist.shift();let z=[...pitchHist].sort((a,b)=>a-b);targetPos=z[Math.floor(z.length/2)];active(targetPos)}sm+=(targetPos-sm)*.075;let y=ty(sm);$("#dot").style.top=y+"%";$("#trail").style.top=y+"%";requestAnimationFrame(listen)}
 function setWallGap(noteIndex){let y=ty(noteIndex),half=7.5;$("#wallTop").style.top="0";$("#wallTop").style.height=Math.max(0,y-half)+"%";$("#wallBottom").style.top=(y+half)+"%";$("#wallBottom").style.bottom="0";$("#wallBottom").style.height="auto"}
 function resetWall(){x=.84;mode="in";hitting=false;wallNote=S?S.note_i:0;setWallGap(wallNote)}
 async function hit(){if(hitting)return;hitting=true;mode="pass";try{await fetch("/api/hit",{method:"POST",headers:{"Content-Type":"application/json"},body:"{}",cache:"no-store"})}catch(e){}}
 function moveWall(){let left=x*100+"%";$("#wallTop").style.left=left;$("#wallBottom").style.left=left}
-function drawWave(dt){
- wavePhase+=dt*2.15;let a="",b="",c="";
- for(let px=0;px<=300;px+=4){
-   let t=px/300,amp=5.8*(.35+.65*t);
-   let base=Math.sin(px*.022-wavePhase)*amp;
-   /* outer tracks gently converge into the orb */
-   let spread=10*(1-t);
-   let y=38+base,y2=38-spread+base,y3=38+spread+base;
-   a+=(px?" L":"M")+px+" "+y.toFixed(1);
-   b+=(px?" L":"M")+px+" "+y2.toFixed(1);
-   c+=(px?" L":"M")+px+" "+y3.toFixed(1);
- }
- $("#wave").setAttribute("d",a);$("#waveSub").setAttribute("d",b);$("#wavePulse").setAttribute("d",c);
-}
-function anim(t){let dt=Math.min(.05,(t-lt)/1000);lt=t;drawWave(dt);if(S&&S.phase==="play"){let target=ty(wallNote);if(mode==="in")x-=dt*.19;else if(mode==="out"){x+=dt*.34;if(x>=.72)mode="in"}else if(mode==="pass"){x-=dt*.24;if(x<-.10)resetWall()}let wx=x*$("#game").clientWidth,dx=.17*$("#game").clientWidth;if(mode==="in"&&wx<=dx+28){if(micOK&&(performance.now()-lastVoice)<260&&Math.abs(ty(sm)-target)<=7)hit();else mode="out"}moveWall()}requestAnimationFrame(anim)}requestAnimationFrame(anim);
-let lastCount="";function draw(s){let phaseChanged=!S||S.phase!==s.phase;S=s;$("#who").textContent=s.name||"";$("#note").textContent=s.note;$("#sc").textContent=s.score;let q=Math.max(0,Math.ceil(s.remaining));$("#tm").textContent=q>=60?"01:00":"00:"+String(q).padStart(2,"0");if(s.phase==="play"){$("#msg").style.display="none";if(phaseChanged)resetWall()}else{$("#msg").style.display="flex";let txt=s.phase==="prep"?String(Math.max(1,Math.ceil(s.remaining))):s.phase==="ready"?"ГОТОВ":s.phase==="timeup"?"ВРЕМЯ!":s.phase==="finished"?"ФИНИШ":"ОЖИДАНИЕ";
-if(s.phase==="prep"){
- if(txt!==lastCount){
-   $("#msg").innerHTML='<div class="countSide"></div><div class="countHud"><div class="countNum">'+txt+'</div><div class="countLabel">SYSTEM // READY</div></div>';
-   lastCount=txt;
- }
-}else{
- $("#msg").innerHTML='<div class="countHud"><div class="countNum" style="font-size:'+(txt.length>3?'35px':'70px')+';animation:startFlash .45s ease-out">'+txt+'</div><div class="countLabel">ТОЧНО В НОТУ</div></div>';
-}}}
+function drawWave(dt){wavePhase+=dt*3.6;let d="";for(let px=0;px<=260;px+=5){let fade=px/260,amp=7+6*fade,y=27+Math.sin(px*.038-wavePhase)*amp;d+=(px?" L":"M")+px.toFixed(1)+" "+y.toFixed(1)}$("#wave").setAttribute("d",d)}
+function anim(t){let dt=Math.min(.05,(t-lt)/1000);lt=t;drawWave(dt);if(S&&S.phase==="play"){let target=ty(wallNote);if(mode==="in")x-=dt*.19;else if(mode==="out"){x+=dt*.34;if(x>=.72)mode="in"}else if(mode==="pass"){x-=dt*.24;if(x<-.10)resetWall()}let wx=x*$("#game").clientWidth,dx=.17*$("#game").clientWidth;if(mode==="in"&&wx<=dx+28){if(micOK&&Math.abs(ty(sm)-target)<=7)hit();else mode="out"}moveWall()}requestAnimationFrame(anim)}requestAnimationFrame(anim);
+function draw(s){let phaseChanged=!S||S.phase!==s.phase;S=s;$("#who").textContent=s.name||"";$("#note").textContent=s.note;$("#sc").textContent=s.score;let q=Math.max(0,Math.ceil(s.remaining));$("#tm").textContent=q>=60?"01:00":"00:"+String(q).padStart(2,"0");if(s.phase==="play"){$("#msg").style.display="none";if(phaseChanged)resetWall()}else{$("#msg").style.display="flex";$("#msg").textContent=s.phase==="prep"?Math.max(1,Math.ceil(s.remaining)):s.phase==="ready"?"ГОТОВ":s.phase==="timeup"?"ВРЕМЯ!":s.phase==="finished"?"ФИНИШ":"ОЖИДАНИЕ"}}
 setInterval(async()=>{try{draw(await fetch("/api/state?_="+Date.now(),{cache:"no-store"}).then(x=>x.json()))}catch(e){}},120);audio()
 </script>"""
