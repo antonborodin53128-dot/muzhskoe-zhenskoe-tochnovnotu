@@ -125,16 +125,46 @@ function draw(s){
  let b=s.phase==="ready"?`<button id=start>СТАРТ</button>`:s.phase==="timeup"?`<button id=next>СЛЕДУЮЩИЙ УЧАСТНИК</button>`:"";
  g.innerHTML=`<h2>${s.name}</h2><div>ПРОЙДЕНО СТЕН</div><div class=big>${s.score}</div><p>НОТА: <b>${s.note}</b></p>${b}`;
 }
-let actionBusy=false;
-g.addEventListener("pointerdown",async e=>{
- let btn=e.target.closest("button");if(!btn||actionBusy)return;
- let url=btn.id==="start"?"/api/start":btn.id==="next"?"/api/next":btn.id==="reset"?"/api/reset":null;
- if(!url)return;
- e.preventDefault();actionBusy=true;
+let actionBusy=false,touchStart=null;
+function actionUrl(btn){
+ return btn.id==="start"?"/api/start":btn.id==="next"?"/api/next":btn.id==="reset"?"/api/reset":btn.id==="finish"?"/api/finish":null;
+}
+async function runAction(btn){
+ if(!btn||actionBusy)return;
+ let url=actionUrl(btn);if(!url)return;
+ actionBusy=true;
  try{await post(url,{},btn)}finally{setTimeout(()=>actionBusy=false,180)}
+}
+/* Mobile safety: scrolling across a button must never activate it.
+   Only a completed tap with little finger movement counts. */
+document.addEventListener("touchstart",e=>{
+ let btn=e.target.closest("button");if(!btn)return;
+ let t=e.changedTouches[0];
+ touchStart={btn,x:t.clientX,y:t.clientY,time:performance.now(),moved:false};
+},{passive:true});
+document.addEventListener("touchmove",e=>{
+ if(!touchStart)return;
+ let t=e.changedTouches[0];
+ if(Math.hypot(t.clientX-touchStart.x,t.clientY-touchStart.y)>10)touchStart.moved=true;
+},{passive:true});
+document.addEventListener("touchend",e=>{
+ if(!touchStart)return;
+ let a=touchStart;touchStart=null;
+ let t=e.changedTouches[0],moved=a.moved||Math.hypot(t.clientX-a.x,t.clientY-a.y)>10;
+ if(moved||performance.now()-a.time>700)return;
+ let endEl=document.elementFromPoint(t.clientX,t.clientY);
+ if(!endEl||!a.btn.contains(endEl)&&endEl!==a.btn)return;
+ e.preventDefault();
+ if(a.btn.id==="init")post("/api/init",{count:+n.value},a.btn);
+ else runAction(a.btn);
+},{passive:false});
+/* Mouse/trackpad keeps reliable one-click behavior. */
+document.addEventListener("click",e=>{
+ if("ontouchstart" in window)return;
+ let btn=e.target.closest("button");if(!btn)return;
+ if(btn.id==="init")post("/api/init",{count:+n.value},btn);
+ else runAction(btn);
 });
-init.onpointerdown=e=>{e.preventDefault();post("/api/init",{count:+n.value},e.currentTarget)};
-finish.onpointerdown=e=>{e.preventDefault();post("/api/finish",{},e.currentTarget)};
 setInterval(async()=>{try{
  let r=await fetch("/api/state?_="+Date.now(),{cache:"no-store"});
  if(r.ok){let j=await r.json(),fp=JSON.stringify(j);if(fp!==lastRender)draw(j)}
