@@ -115,27 +115,36 @@ SCREEN=r"""<!doctype html><meta charset=utf-8><meta name=viewport content="width
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#020203;color:#fff;font-family:Arial,sans-serif}
 .stage{height:100vh;padding:24px 34px 30px;background:radial-gradient(circle at 48% 44%,#130711 0,#060306 38%,#020203 72%);display:flex;flex-direction:column}
 .hud{height:92px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;position:relative;z-index:20}
-.brand{position:relative;display:inline-flex;align-items:baseline;gap:9px;width:max-content;padding:8px 18px 9px 20px;font-family:"Arial Black","Arial Narrow",Arial,sans-serif;font-size:39px;font-weight:900;font-style:italic;letter-spacing:-1px;line-height:1;text-transform:uppercase;clip-path:polygon(10px 0,100% 0,calc(100% - 12px) 100%,0 100%);background:linear-gradient(90deg,#160812,#080508);border-top:1px solid #ff5caf;border-bottom:1px solid #ff5caf;text-shadow:3px 3px 0 #521334}.brand:after{content:"// 07";font-family:Arial,sans-serif;font-size:10px;font-style:normal;letter-spacing:2px;color:#ff77bd;margin-left:6px}.brand span{color:#ff57ad;text-shadow:0 0 9px #ff4fa8,0 0 22px #ff2e9655}
+.brand{position:relative;display:inline-block;width:max-content;font-family:"Arial Black",Arial,sans-serif;font-size:43px;font-weight:900;letter-spacing:3px;line-height:1;text-transform:uppercase;color:#fff;text-shadow:0 0 18px #ff4fa840}.brand span{color:#ff58ae;text-shadow:0 0 10px #ff58ae,0 0 28px #ff2e9680}.brand:after{content:"";position:absolute;left:0;right:0;bottom:-10px;height:2px;background:linear-gradient(90deg,#ff58ae,transparent 82%);box-shadow:0 0 10px #ff58ae}
 .centerHud{text-align:center}.participant{font-size:15px;color:#9f8997;font-weight:800;letter-spacing:1.6px}.targetTitle{margin-top:5px;font-size:16px;color:#d7c7d0;font-weight:800;letter-spacing:1px}.targetTitle b{color:#ff55ad;font-size:30px;margin-left:8px}
 .stats{display:flex;justify-content:flex-end;gap:12px}.pill{min-width:132px;padding:11px 16px;border:1px solid #4b263c;background:#0c070b;border-radius:12px;text-align:center}.pill small{display:block;color:#9f8997;font-size:11px;font-weight:900;letter-spacing:1.5px}.pill strong{display:block;margin-top:3px;font-size:25px;color:#fff}.pill strong.pink{color:#ff55ad}
-.game{position:relative;flex:1;min-height:0;border:1px solid #3b1d30;border-radius:14px;overflow:hidden;background:radial-gradient(circle at 38% 50%,#150713 0,#080407 30%,#020203 72%)}
+.game{position:relative;flex:1;min-height:0;border:1px solid #3b1d30;border-radius:14px;overflow:hidden;background:
+radial-gradient(ellipse at 70% 28%,#8a18533d 0,transparent 26%),
+radial-gradient(ellipse at 48% 72%,#d32b7b24 0,transparent 30%),
+radial-gradient(ellipse at 25% 42%,#50134732 0,transparent 24%),
+linear-gradient(90deg,#010106,#07030b 48%,#010106)}
 .vignette{position:absolute;inset:0;box-shadow:inset 0 0 100px #000;pointer-events:none;z-index:12}
-.motion{position:absolute;inset:0;overflow:hidden;opacity:.72}
-.motion:before,.motion:after{content:"";position:absolute;left:0;top:0;width:200%;height:100%;background:
-radial-gradient(circle,#ff5caf78 0 1px,transparent 2px) 0 0/150px 95px,
-linear-gradient(90deg,transparent 0 86%,#ff4fa81d 87% 88%,transparent 89%) 0 0/220px 100%;
-animation:bgloop 22s linear infinite;will-change:transform}
-.motion:after{opacity:.24;filter:blur(.5px);background-size:260px 155px,390px 100%;animation-duration:38s}
-@keyframes bgloop{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.motion{position:absolute;inset:0;overflow:hidden}
+.motion:before,.motion:after{content:"";position:absolute;left:0;top:0;width:200%;height:100%;will-change:transform;animation:spaceLoop 38s linear infinite;background:
+radial-gradient(circle,#fff 0 1px,transparent 1.7px) 15px 22px/137px 103px,
+radial-gradient(circle,#ff8ac7 0 1px,transparent 1.8px) 72px 51px/211px 151px,
+radial-gradient(ellipse at 18% 35%,#e22b8750 0,transparent 12%),
+radial-gradient(ellipse at 42% 70%,#8f1f6945 0,transparent 15%),
+radial-gradient(ellipse at 72% 30%,#ff3d9840 0,transparent 13%)}
+.motion:after{opacity:.42;filter:blur(12px);animation-duration:65s;background:
+radial-gradient(ellipse at 15% 55%,#ff3f9d65 0,transparent 15%),
+radial-gradient(ellipse at 38% 30%,#8d2a8a55 0,transparent 13%),
+radial-gradient(ellipse at 66% 68%,#d9267c55 0,transparent 17%)}
+@keyframes spaceLoop{from{transform:translateX(0)}to{transform:translateX(-50%)}}to{transform:translateX(-50%)}}
 .guide{position:absolute;left:0;right:116px;border-top:1px solid #7e3d6350;z-index:1}
 .guide:after{content:"";position:absolute;left:0;right:0;top:-1px;border-top:1px dashed #ff55aa1f}
 .noteLabel{position:absolute;right:24px;width:78px;text-align:center;transform:translateY(-50%);font-size:26px;font-weight:900;letter-spacing:1.5px;color:#ff4fa8;transition:transform .24s ease,color .24s ease,text-shadow .24s ease;z-index:9}
-.noteLabel.active{color:#fff;transform:translateY(-50%) scale(1.38);text-shadow:0 0 8px #fff,0 0 24px #ff4fa8,0 0 42px #ff2e96}
-.dot{position:absolute;left:17%;top:50%;width:42px;height:42px;border-radius:50%;transform:translate(-50%,-50%);z-index:9;background:radial-gradient(circle,#fff 0 12%,#ffb4dc 13% 22%,#ff4fa8 23% 35%,#260918 36% 53%,#ff4fa8 54% 58%,transparent 59%);box-shadow:0 0 9px #fff,0 0 24px #ff4fa8,0 0 50px #ff2e9670;animation:corePulse 1.15s ease-in-out infinite alternate}.dot:before,.dot:after{content:"";position:absolute;inset:-9px;border:2px dashed #ff77bd;border-radius:50%;opacity:.75;animation:spinCore 2.4s linear infinite}.dot:after{inset:-16px;border-width:1px;border-style:solid;border-color:#ff4fa8 transparent #ff4fa8 transparent;opacity:.45;animation-duration:3.8s;animation-direction:reverse}@keyframes spinCore{to{transform:rotate(360deg)}}@keyframes corePulse{to{filter:brightness(1.25);box-shadow:0 0 12px #fff,0 0 30px #ff4fa8,0 0 62px #ff2e9690}}
-.trail{position:absolute;left:2%;width:15%;height:72px;top:50%;transform:translateY(-50%);z-index:6;overflow:visible;filter:drop-shadow(0 0 5px #ff3c9988)}.trail .main{fill:none;stroke:#ff71b8;stroke-width:2.2;stroke-linecap:round}.trail .sub{fill:none;stroke:#ff3f9d;stroke-width:1;opacity:.5;stroke-dasharray:8 10}.trail .pulse{fill:none;stroke:#fff;stroke-width:1.2;opacity:.7;stroke-dasharray:2 15}
+.noteLabel.active{color:#fff;transform:translateY(-50%) scale(1.72);text-shadow:0 0 8px #fff,0 0 18px #fff,0 0 34px #ff5aad,0 0 65px #ff2e96;z-index:15}
+.dot{position:absolute;left:17%;top:50%;width:34px;height:34px;border-radius:50%;transform:translate(-50%,-50%);z-index:9;background:radial-gradient(circle at 38% 32%,#fff 0 12%,#ffd4eb 13% 25%,#ff5aad 40%,#b51f6c 72%,#430b2b 100%);border:1px solid #ff9dce;box-shadow:0 0 8px #fff,0 0 20px #ff5aad,0 0 45px #ff2e9675;animation:orbPulse 1.1s ease-in-out infinite alternate}.dot:before{content:"";position:absolute;inset:-7px;border-radius:50%;border:1px solid #ff79bd55}.dot:after{content:"";position:absolute;inset:-13px;border-radius:50%;border:1px solid #ff4fa825}@keyframes orbPulse{to{filter:brightness(1.18);box-shadow:0 0 10px #fff,0 0 25px #ff5aad,0 0 55px #ff2e9685}}}
+.trail{position:absolute;left:2%;width:15%;height:76px;top:50%;transform:translateY(-50%);z-index:6;overflow:visible}.trail path{fill:none;stroke-linecap:round}.trail .main{stroke-width:2.3}.trail .sub{stroke-width:1.2;opacity:.58}.trail .pulse{stroke-width:.9;opacity:.34}
 .wallPart{position:absolute;width:68px;background:repeating-linear-gradient(0deg,#140912 0 22px,#26101e 23px 25px);border-left:2px solid #ff4fa8;border-right:2px solid #ff4fa8;box-shadow:inset 0 0 20px #ff3c9924,0 0 16px #ff2e9655;z-index:7}.wallPart:after{content:"";position:absolute;inset:8px 11px;border-left:1px solid #ff67b044;border-right:1px solid #ff67b044}.wallCap{position:absolute;left:-10px;right:-10px;height:8px;background:#120910;border:2px solid #ff75bb;box-shadow:0 0 12px #ff4fa8,0 0 28px #ff2e9660}
 #wallTop .wallCap{bottom:0}#wallBottom .wallCap{top:0}
-.msg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#030203e8;font-size:84px;font-weight:900;letter-spacing:2px;z-index:30}
+.msg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:#020207e8;font-family:"Arial Black",Arial,sans-serif;font-size:112px;font-weight:900;letter-spacing:4px;z-index:30;text-shadow:0 0 10px #fff,0 0 32px #ff4fa8,0 0 70px #ff2e96;transition:transform .14s,opacity .14s}.msg.tick{animation:countTick .82s cubic-bezier(.2,.8,.2,1)}@keyframes countTick{0%{transform:scale(1.8);opacity:0}25%{transform:scale(1);opacity:1}75%{transform:scale(1);opacity:1}100%{transform:scale(.72);opacity:.15}}
 .mic{position:absolute;right:18px;bottom:16px;padding:12px 16px;background:#ff3199;color:#fff;border:0;border-radius:10px;font-weight:900;z-index:40}
 </style>
 <main class=stage>
@@ -146,15 +155,18 @@ animation:bgloop 22s linear infinite;will-change:transform}
  </header>
  <section id=game class=game>
   <div class=motion></div><div id=lines></div><svg id=trail class=trail viewBox="0 0 300 72" preserveAspectRatio="none" aria-hidden="true">
-<defs><linearGradient id="fadeTrail" x1="0" x2="1"><stop offset="0" stop-color="#ff4fa8" stop-opacity="0"/><stop offset=".38" stop-color="#ff4fa8" stop-opacity=".25"/><stop offset="1" stop-color="#ff8ac7" stop-opacity="1"/></linearGradient></defs>
-<path id=waveSub class=sub d=""></path><path id=wave class=main stroke="url(#fadeTrail)" d=""></path><path id=wavePulse class=pulse d=""></path></svg><div id=dot class=dot></div>
+<defs>
+<linearGradient id="fadeTrail" x1="0" x2="1"><stop offset="0" stop-color="#ff4fa8" stop-opacity="0"/><stop offset=".34" stop-color="#ff4fa8" stop-opacity=".12"/><stop offset=".72" stop-color="#ff5aad" stop-opacity=".58"/><stop offset="1" stop-color="#ffd1e8" stop-opacity=".95"/></linearGradient>
+<linearGradient id="fadeTrail2" x1="0" x2="1"><stop offset="0" stop-color="#ff4fa8" stop-opacity="0"/><stop offset=".48" stop-color="#ff4fa8" stop-opacity=".08"/><stop offset="1" stop-color="#ff5aad" stop-opacity=".55"/></linearGradient>
+</defs>
+<path id=waveSub class=sub stroke="url(#fadeTrail2)" d=""></path><path id=wave class=main stroke="url(#fadeTrail)" d=""></path><path id=wavePulse class=pulse stroke="url(#fadeTrail2)" d=""></path></svg><div id=dot class=dot></div>
   <div id=wallTop class=wallPart><i class=wallCap></i></div><div id=wallBottom class=wallPart><i class=wallCap></i></div>
   <div class=vignette></div><div id=msg class=msg>ОЖИДАНИЕ</div><button id=mic class=mic>ПОДКЛЮЧИТЬ МИКРОФОН</button>
  </section>
 </main>
 <script>
 const NS=["DO","RE","MI","FA","SOL","LA","TI"],$=x=>document.querySelector(x);
-let st,ctx,an,b,sr=48000,sm=3,targetPos=3,micOK=false,S=null,x=.84,mode="in",lt=performance.now(),hitting=false,pitchHist=[],wallNote=0,wavePhase=0;
+let st,ctx,an,b,sr=48000,sm=3,targetPos=3,micOK=false,S=null,x=.84,mode="in",lt=performance.now(),hitting=false,pitchHist=[],wallNote=0,wavePhase=0,lastVoice=0;
 /* Высокие ноты сверху, низкие снизу: TI ... DO */
 function ty(i){return 88-i*(76/6)}
 $("#lines").innerHTML=NS.map((n,i)=>`<div class=guide style="top:${ty(i)}%"></div><div class=noteLabel id=l${i} style="top:${ty(i)}%">${n}</div>`).join("");
@@ -164,26 +176,29 @@ function pitch(a){let mean=0;for(let v of a)mean+=v;mean/=a.length;let rms=0;for
 const pcs=[0,2,4,5,7,9,11];
 function notePos(m){let pc=((m-60)%12+12)%12,best=0,bd=99;pcs.forEach((v,i)=>{let d=Math.min(Math.abs(pc-v),12-Math.abs(pc-v));if(d<bd){bd=d;best=i}});/* TI/B sits next to the octave boundary; give its upper half a stable capture zone */if(pc>=10.35&&pc<=11.85)best=6;return best}
 function active(i){document.querySelectorAll(".noteLabel").forEach((e,j)=>e.classList.toggle("active",j===i))}
-function listen(){an.getFloatTimeDomainData(b);let m=pitch(b);if(m!=null){let p=notePos(m);pitchHist.push(p);if(pitchHist.length>5)pitchHist.shift();let z=[...pitchHist].sort((a,b)=>a-b);targetPos=z[Math.floor(z.length/2)];active(targetPos)}sm+=(targetPos-sm)*.075;let y=ty(sm);$("#dot").style.top=y+"%";$("#trail").style.top=y+"%";requestAnimationFrame(listen)}
+function listen(){an.getFloatTimeDomainData(b);let m=pitch(b);if(m!=null){lastVoice=performance.now();let p=notePos(m);pitchHist.push(p);if(pitchHist.length>5)pitchHist.shift();let z=[...pitchHist].sort((a,b)=>a-b);targetPos=z[Math.floor(z.length/2)];active(targetPos)}if(performance.now()-lastVoice>260){
+  /* no confirmed voice: move away from the wall gap so silence can never coast through */
+  let avoid=(S&&S.phase==="play")?S.note_i:3;
+  targetPos=avoid>=3?0:6;
+  active(-1);
+}
+sm+=(targetPos-sm)*.075;let y=ty(sm);$("#dot").style.top=y+"%";$("#trail").style.top=y+"%";requestAnimationFrame(listen)}
 function setWallGap(noteIndex){let y=ty(noteIndex),half=7.5;$("#wallTop").style.top="0";$("#wallTop").style.height=Math.max(0,y-half)+"%";$("#wallBottom").style.top=(y+half)+"%";$("#wallBottom").style.bottom="0";$("#wallBottom").style.height="auto"}
 function resetWall(){x=.84;mode="in";hitting=false;wallNote=S?S.note_i:0;setWallGap(wallNote)}
 async function hit(){if(hitting)return;hitting=true;mode="pass";try{await fetch("/api/hit",{method:"POST",headers:{"Content-Type":"application/json"},body:"{}",cache:"no-store"})}catch(e){}}
 function moveWall(){let left=x*100+"%";$("#wallTop").style.left=left;$("#wallBottom").style.left=left}
 function drawWave(dt){
- wavePhase+=dt*3.0;
- let a="",b="",c="";
- for(let px=0;px<=300;px+=5){
-   let fade=px/300, amp=4+7*fade;
-   let y=36+Math.sin(px*.028-wavePhase)*amp + Math.sin(px*.071-wavePhase*.55)*1.6;
-   let y2=36+Math.sin(px*.028-wavePhase+.75)*(amp*.72)-7;
-   let y3=36+Math.sin(px*.028-wavePhase-1.0)*(amp*.48)+8;
-   a+=(px?" L":"M")+px.toFixed(1)+" "+y.toFixed(1);
-   b+=(px?" L":"M")+px.toFixed(1)+" "+y2.toFixed(1);
-   c+=(px?" L":"M")+px.toFixed(1)+" "+y3.toFixed(1);
+ wavePhase+=dt*2.5;let a="",b="",c="";
+ for(let px=0;px<=300;px+=4){
+   let amp=7.5,base=Math.sin(px*.025-wavePhase)*amp;
+   let y=38+base,y2=27+base,y3=49+base;
+   a+=(px?" L":"M")+px+" "+y.toFixed(1);
+   b+=(px?" L":"M")+px+" "+y2.toFixed(1);
+   c+=(px?" L":"M")+px+" "+y3.toFixed(1);
  }
  $("#wave").setAttribute("d",a);$("#waveSub").setAttribute("d",b);$("#wavePulse").setAttribute("d",c);
 }
-function anim(t){let dt=Math.min(.05,(t-lt)/1000);lt=t;drawWave(dt);if(S&&S.phase==="play"){let target=ty(wallNote);if(mode==="in")x-=dt*.19;else if(mode==="out"){x+=dt*.34;if(x>=.72)mode="in"}else if(mode==="pass"){x-=dt*.24;if(x<-.10)resetWall()}let wx=x*$("#game").clientWidth,dx=.17*$("#game").clientWidth;if(mode==="in"&&wx<=dx+28){if(micOK&&Math.abs(ty(sm)-target)<=7)hit();else mode="out"}moveWall()}requestAnimationFrame(anim)}requestAnimationFrame(anim);
-function draw(s){let phaseChanged=!S||S.phase!==s.phase;S=s;$("#who").textContent=s.name||"";$("#note").textContent=s.note;$("#sc").textContent=s.score;let q=Math.max(0,Math.ceil(s.remaining));$("#tm").textContent=q>=60?"01:00":"00:"+String(q).padStart(2,"0");if(s.phase==="play"){$("#msg").style.display="none";if(phaseChanged)resetWall()}else{$("#msg").style.display="flex";$("#msg").textContent=s.phase==="prep"?Math.max(1,Math.ceil(s.remaining)):s.phase==="ready"?"ГОТОВ":s.phase==="timeup"?"ВРЕМЯ!":s.phase==="finished"?"ФИНИШ":"ОЖИДАНИЕ"}}
+function anim(t){let dt=Math.min(.05,(t-lt)/1000);lt=t;drawWave(dt);if(S&&S.phase==="play"){let target=ty(wallNote);if(mode==="in")x-=dt*.19;else if(mode==="out"){x+=dt*.34;if(x>=.72)mode="in"}else if(mode==="pass"){x-=dt*.24;if(x<-.10)resetWall()}let wx=x*$("#game").clientWidth,dx=.17*$("#game").clientWidth;if(mode==="in"&&wx<=dx+28){if(micOK&&(performance.now()-lastVoice)<260&&Math.abs(ty(sm)-target)<=7)hit();else mode="out"}moveWall()}requestAnimationFrame(anim)}requestAnimationFrame(anim);
+let lastCount="";function draw(s){let phaseChanged=!S||S.phase!==s.phase;S=s;$("#who").textContent=s.name||"";$("#note").textContent=s.note;$("#sc").textContent=s.score;let q=Math.max(0,Math.ceil(s.remaining));$("#tm").textContent=q>=60?"01:00":"00:"+String(q).padStart(2,"0");if(s.phase==="play"){$("#msg").style.display="none";if(phaseChanged)resetWall()}else{$("#msg").style.display="flex";let txt=s.phase==="prep"?String(Math.max(1,Math.ceil(s.remaining))):s.phase==="ready"?"ГОТОВ":s.phase==="timeup"?"ВРЕМЯ!":s.phase==="finished"?"ФИНИШ":"ОЖИДАНИЕ";$("#msg").textContent=txt;if(s.phase==="prep"&&txt!==lastCount){$("#msg").classList.remove("tick");void $("#msg").offsetWidth;$("#msg").classList.add("tick");lastCount=txt}}}
 setInterval(async()=>{try{draw(await fetch("/api/state?_="+Date.now(),{cache:"no-store"}).then(x=>x.json()))}catch(e){}},120);audio()
 </script>"""
