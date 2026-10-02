@@ -83,14 +83,18 @@ button:active,.pressed{transform:scale(.96);filter:brightness(1.35);box-shadow:0
 <div id=res class="c results"><h2>РЕЗУЛЬТАТЫ</h2><div class=muted>Пока нет завершённых участников</div></div>
 <button id=finish class=danger style="display:none">ЗАВЕРШИТЬ ИГРУ</button>
 <script>
-const $=x=>document.querySelector(x);let busy=false,last=null;
+const $=x=>document.querySelector(x);let pending=0,last=null;
 async function post(u,b={},btn=null){
- if(busy)return null;busy=true;
+ const token=++pending;
  if(btn){btn.classList.add("pressed");btn.disabled=true}
- ack.textContent="КОМАНДА ПРИНЯТА";
- try{let r=await fetch(u,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b),cache:"no-store"});let j=await r.json();draw(j);return j}
- catch(e){ack.textContent="ОШИБКА СВЯЗИ — НАЖМИТЕ ЕЩЁ РАЗ"}
- finally{setTimeout(()=>{busy=false;if(btn){btn.disabled=false;btn.classList.remove("pressed")}ack.textContent=""},450)}
+ ack.textContent="ОТПРАВЛЯЮ…";
+ try{
+   let r=await fetch(u+"?_="+Date.now(),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b),cache:"no-store"});
+   if(!r.ok)throw new Error("HTTP "+r.status);
+   let j=await r.json(); draw(j); ack.textContent="ГОТОВО";
+   return j;
+ }catch(e){ack.textContent="ОШИБКА СВЯЗИ — ПОВТОРИТЕ"}
+ finally{setTimeout(()=>{if(token===pending)ack.textContent="";if(btn){btn.disabled=false;btn.classList.remove("pressed")}},700)}
 }
 function rows(a){return a.length?a.map((x,i)=>`<div class=r><span>${["🥇","🥈","🥉"][i]||""} ${x.name}</span><b>${x.score}</b></div>`).join(""):`<div class=muted>Пока нет завершённых участников</div>`}
 function draw(s){
@@ -104,14 +108,14 @@ function draw(s){
 }
 init.onclick=e=>post("/api/init",{count:+n.value},e.currentTarget);
 finish.onclick=e=>post("/api/finish",{},e.currentTarget);
-setInterval(async()=>{if(busy)return;try{draw(await fetch("/api/state?_="+Date.now(),{cache:"no-store"}).then(x=>x.json()))}catch(e){}},180);
+setInterval(async()=>{try{let r=await fetch("/api/state?_="+Date.now(),{cache:"no-store"});if(r.ok)draw(await r.json())}catch(e){}},180);
 </script>"""
 SCREEN=r"""<!doctype html><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1">
 <style>
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#020203;color:#fff;font-family:Arial,sans-serif}
 .stage{height:100vh;padding:24px 34px 30px;background:radial-gradient(circle at 48% 44%,#130711 0,#060306 38%,#020203 72%);display:flex;flex-direction:column}
 .hud{height:92px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;position:relative;z-index:20}
-.brand{display:inline-flex;align-items:center;gap:10px;width:max-content;padding:11px 18px 10px;border:1px solid #ff4fa8;border-left:5px solid #ff4fa8;border-radius:8px;font-family:Impact,"Arial Narrow",Arial,sans-serif;font-size:40px;font-weight:900;font-style:italic;letter-spacing:2px;line-height:1;text-transform:uppercase;transform:skew(-3deg);box-shadow:inset 0 0 18px #ff3c9912,0 0 18px #ff3c9925}.brand span{color:#ff4fa8;text-shadow:0 0 14px #ff3c9970}
+.brand{display:inline-block;width:max-content;padding:7px 15px 8px;border-top:2px solid #ff4fa8;border-bottom:2px solid #ff4fa8;font-family:"Arial Black",Arial,sans-serif;font-size:37px;font-weight:900;letter-spacing:1px;line-height:1;text-transform:uppercase;text-shadow:0 2px 0 #4b1735,0 0 18px #ff3c9935}.brand:before,.brand:after{content:"◆";color:#ff4fa8;font-size:13px;vertical-align:middle;margin:0 9px}.brand span{color:#ff4fa8;text-shadow:0 0 12px #ff3c9970}
 .centerHud{text-align:center}.participant{font-size:15px;color:#9f8997;font-weight:800;letter-spacing:1.6px}.targetTitle{margin-top:5px;font-size:16px;color:#d7c7d0;font-weight:800;letter-spacing:1px}.targetTitle b{color:#ff55ad;font-size:30px;margin-left:8px}
 .stats{display:flex;justify-content:flex-end;gap:12px}.pill{min-width:132px;padding:11px 16px;border:1px solid #4b263c;background:#0c070b;border-radius:12px;text-align:center}.pill small{display:block;color:#9f8997;font-size:11px;font-weight:900;letter-spacing:1.5px}.pill strong{display:block;margin-top:3px;font-size:25px;color:#fff}.pill strong.pink{color:#ff55ad}
 .game{position:relative;flex:1;min-height:0;border:1px solid #3b1d30;border-radius:18px;overflow:hidden;background:linear-gradient(90deg,#030203,#080407 48%,#030203)}
@@ -156,14 +160,14 @@ async function audio(){try{let id=localStorage.getItem("voiceMeterDevice");st=aw
 $("#mic").onclick=audio;
 function pitch(a){let mean=0;for(let v of a)mean+=v;mean/=a.length;let rms=0;for(let v of a){let q=v-mean;rms+=q*q}rms=Math.sqrt(rms/a.length);if(rms<.007)return null;const minF=65,maxF=700,lo=Math.max(2,Math.floor(sr/maxF)),hi=Math.min(Math.floor(sr/minF),Math.floor(a.length*.48));let corr=new Float32Array(hi+1),best=0;for(let l=lo;l<=hi;l++){let xy=0,xx=0,yy=0,n=a.length-l;for(let i=0;i<n;i++){let xxv=a[i]-mean,yyv=a[i+l]-mean;xy+=xxv*yyv;xx+=xxv*xxv;yy+=yyv*yyv}let c=xy/Math.sqrt(xx*yy+1e-12);corr[l]=c;if(c>best)best=c}if(best<.55)return null;let lag=0,gate=Math.max(.58,best*.90);for(let l=lo+1;l<hi;l++)if(corr[l]>=gate&&corr[l]>=corr[l-1]&&corr[l]>=corr[l+1]){lag=l;break}if(!lag){for(let l=lo;l<=hi;l++)if(corr[l]===best){lag=l;break}}if(lag>lo&&lag<hi){let a1=corr[lag-1],a2=corr[lag],a3=corr[lag+1],d=a1-2*a2+a3;if(Math.abs(d)>1e-6)lag+=.5*(a1-a3)/d}let f=sr/lag;if(f<minF||f>maxF)return null;return 69+12*Math.log2(f/440)}
 const pcs=[0,2,4,5,7,9,11];
-function notePos(m){let pc=((Math.round(m)-60)%12+12)%12,best=0,bd=99;pcs.forEach((v,i)=>{let d=Math.min(Math.abs(pc-v),12-Math.abs(pc-v));if(d<bd){bd=d;best=i}});return best}
+function notePos(m){let pc=((m-60)%12+12)%12,best=0,bd=99;pcs.forEach((v,i)=>{let d=Math.min(Math.abs(pc-v),12-Math.abs(pc-v));if(d<bd){bd=d;best=i}});/* TI/B sits next to the octave boundary; give its upper half a stable capture zone */if(pc>=10.35&&pc<=11.85)best=6;return best}
 function active(i){document.querySelectorAll(".noteLabel").forEach((e,j)=>e.classList.toggle("active",j===i))}
 function listen(){an.getFloatTimeDomainData(b);let m=pitch(b);if(m!=null){let p=notePos(m);pitchHist.push(p);if(pitchHist.length>5)pitchHist.shift();let z=[...pitchHist].sort((a,b)=>a-b);targetPos=z[Math.floor(z.length/2)];active(targetPos)}sm+=(targetPos-sm)*.075;let y=ty(sm);$("#dot").style.top=y+"%";$("#trail").style.top=y+"%";requestAnimationFrame(listen)}
 function setWallGap(noteIndex){let y=ty(noteIndex),half=7.5;$("#wallTop").style.top="0";$("#wallTop").style.height=Math.max(0,y-half)+"%";$("#wallBottom").style.top=(y+half)+"%";$("#wallBottom").style.bottom="0";$("#wallBottom").style.height="auto"}
 function resetWall(){x=.84;mode="in";hitting=false;wallNote=S?S.note_i:0;setWallGap(wallNote)}
 async function hit(){if(hitting)return;hitting=true;mode="pass";try{await fetch("/api/hit",{method:"POST",headers:{"Content-Type":"application/json"},body:"{}",cache:"no-store"})}catch(e){}}
 function moveWall(){let left=x*100+"%";$("#wallTop").style.left=left;$("#wallBottom").style.left=left}
-function drawWave(dt){wavePhase+=dt*5.4;let d="";for(let px=0;px<=260;px+=5){let fade=px/260,amp=8+7*fade,y=27+Math.sin(px*.085-wavePhase)*amp;d+=(px?" L":"M")+px.toFixed(1)+" "+y.toFixed(1)}$("#wave").setAttribute("d",d)}
+function drawWave(dt){wavePhase+=dt*3.6;let d="";for(let px=0;px<=260;px+=5){let fade=px/260,amp=7+6*fade,y=27+Math.sin(px*.038-wavePhase)*amp;d+=(px?" L":"M")+px.toFixed(1)+" "+y.toFixed(1)}$("#wave").setAttribute("d",d)}
 function anim(t){let dt=Math.min(.05,(t-lt)/1000);lt=t;drawWave(dt);if(S&&S.phase==="play"){let target=ty(wallNote);if(mode==="in")x-=dt*.19;else if(mode==="out"){x+=dt*.34;if(x>=.72)mode="in"}else if(mode==="pass"){x-=dt*.24;if(x<-.10)resetWall()}let wx=x*$("#game").clientWidth,dx=.17*$("#game").clientWidth;if(mode==="in"&&wx<=dx+28){if(micOK&&Math.abs(ty(sm)-target)<=7)hit();else mode="out"}moveWall()}requestAnimationFrame(anim)}requestAnimationFrame(anim);
 function draw(s){let phaseChanged=!S||S.phase!==s.phase;S=s;$("#who").textContent=s.name||"";$("#note").textContent=s.note;$("#sc").textContent=s.score;let q=Math.max(0,Math.ceil(s.remaining));$("#tm").textContent=q>=60?"01:00":"00:"+String(q).padStart(2,"0");if(s.phase==="play"){$("#msg").style.display="none";if(phaseChanged)resetWall()}else{$("#msg").style.display="flex";$("#msg").textContent=s.phase==="prep"?Math.max(1,Math.ceil(s.remaining)):s.phase==="ready"?"ГОТОВ":s.phase==="timeup"?"ВРЕМЯ!":s.phase==="finished"?"ФИНИШ":"ОЖИДАНИЕ"}}
 setInterval(async()=>{try{draw(await fetch("/api/state?_="+Date.now(),{cache:"no-store"}).then(x=>x.json()))}catch(e){}},120);audio()
