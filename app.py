@@ -86,6 +86,8 @@ button:active,.pressed{transform:scale(.96);filter:brightness(1.35);box-shadow:0
 #g h2,#res h2{margin:0 0 12px}.big{line-height:1}
 #g button{width:100%;min-height:58px;font-size:20px;margin-top:8px}
 .danger{width:100%;margin-top:22px}
+.resetGame{width:100%;margin:14px 0 4px;background:#181518;color:#d8cfd4;border:0;box-shadow:none}
+.resetGame:active,.resetGame.pressed{filter:brightness(1.2);box-shadow:none}
 @media(max-width:560px){
  body{padding:12px;font-size:16px}h1{font-size:27px;margin:8px 0 12px}.c{padding:14px;margin:10px 0;border-radius:14px}
  .setupRow{grid-template-columns:1fr}.setupRow button{min-height:56px}
@@ -119,7 +121,7 @@ function draw(s){
  res.innerHTML="<h2>РЕЗУЛЬТАТЫ</h2>"+rows(s.ranking||[]);
  finish.style.display=s.ps&&s.ps.length&&s.phase!=="finished"?"block":"none";
  if(!s.ps.length){g.innerHTML="ОЖИДАНИЕ";return}
- if(s.phase==="finished"){g.innerHTML="<h2>ИГРА ЗАВЕРШЕНА</h2>"+rows(s.ranking)+`<p><button id=reset>НАЧАТЬ ЗАНОВО</button>`;return}
+ if(s.phase==="finished"){g.innerHTML=`<h2>ИГРА ЗАВЕРШЕНА</h2><button id=reset class=resetGame>СБРОСИТЬ ИГРУ</button>`;return}
  let b=s.phase==="ready"?`<button id=start>СТАРТ</button>`:s.phase==="timeup"?`<button id=next>СЛЕДУЮЩИЙ УЧАСТНИК</button>`:"";
  g.innerHTML=`<h2>${s.name}</h2><div>ПРОЙДЕНО СТЕН</div><div class=big>${s.score}</div><p>НОТА: <b>${s.note}</b></p>${b}`;
 }
