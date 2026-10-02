@@ -83,7 +83,7 @@ button:active,.pressed{transform:scale(.96);filter:brightness(1.35);box-shadow:0
 <div id=res class="c results"><h2>РЕЗУЛЬТАТЫ</h2><div class=muted>Пока нет завершённых участников</div></div>
 <button id=finish class=danger style="display:none">ЗАВЕРШИТЬ ИГРУ</button>
 <script>
-const $=x=>document.querySelector(x);let pending=0,last=null;
+const $=x=>document.querySelector(x);let pending=0,last=null,lastRender="";
 async function post(u,b={},btn=null){
  const token=++pending;
  if(btn){btn.classList.add("pressed");btn.disabled=true}
@@ -98,17 +98,28 @@ async function post(u,b={},btn=null){
 }
 function rows(a){return a.length?a.map((x,i)=>`<div class=r><span>${["🥇","🥈","🥉"][i]||""} ${x.name}</span><b>${x.score}</b></div>`).join(""):`<div class=muted>Пока нет завершённых участников</div>`}
 function draw(s){
- last=s;res.innerHTML="<h2>РЕЗУЛЬТАТЫ</h2>"+rows(s.ranking||[]);
+ last=s;lastRender=JSON.stringify(s);
+ res.innerHTML="<h2>РЕЗУЛЬТАТЫ</h2>"+rows(s.ranking||[]);
  finish.style.display=s.ps&&s.ps.length&&s.phase!=="finished"?"block":"none";
  if(!s.ps.length){g.innerHTML="ОЖИДАНИЕ";return}
- if(s.phase==="finished"){g.innerHTML="<h2>ИГРА ЗАВЕРШЕНА</h2>"+rows(s.ranking)+`<p><button id=reset>НАЧАТЬ ЗАНОВО</button>`;$("#reset").onclick=e=>post("/api/reset",{},e.currentTarget);return}
+ if(s.phase==="finished"){g.innerHTML="<h2>ИГРА ЗАВЕРШЕНА</h2>"+rows(s.ranking)+`<p><button id=reset>НАЧАТЬ ЗАНОВО</button>`;return}
  let b=s.phase==="ready"?`<button id=start>СТАРТ</button>`:s.phase==="timeup"?`<button id=next>СЛЕДУЮЩИЙ УЧАСТНИК</button>`:"";
  g.innerHTML=`<h2>${s.name}</h2><div>ПРОЙДЕНО СТЕН</div><div class=big>${s.score}</div><p>НОТА: <b>${s.note}</b></p>${b}`;
- let st=$("#start"),nx=$("#next");if(st)st.onclick=e=>post("/api/start",{},e.currentTarget);if(nx)nx.onclick=e=>post("/api/next",{},e.currentTarget)
 }
-init.onclick=e=>post("/api/init",{count:+n.value},e.currentTarget);
-finish.onclick=e=>post("/api/finish",{},e.currentTarget);
-setInterval(async()=>{try{let r=await fetch("/api/state?_="+Date.now(),{cache:"no-store"});if(r.ok)draw(await r.json())}catch(e){}},180);
+let actionBusy=false;
+g.addEventListener("pointerdown",async e=>{
+ let btn=e.target.closest("button");if(!btn||actionBusy)return;
+ let url=btn.id==="start"?"/api/start":btn.id==="next"?"/api/next":btn.id==="reset"?"/api/reset":null;
+ if(!url)return;
+ e.preventDefault();actionBusy=true;
+ try{await post(url,{},btn)}finally{setTimeout(()=>actionBusy=false,180)}
+});
+init.onpointerdown=e=>{e.preventDefault();post("/api/init",{count:+n.value},e.currentTarget)};
+finish.onpointerdown=e=>{e.preventDefault();post("/api/finish",{},e.currentTarget)};
+setInterval(async()=>{try{
+ let r=await fetch("/api/state?_="+Date.now(),{cache:"no-store"});
+ if(r.ok){let j=await r.json(),fp=JSON.stringify(j);if(fp!==lastRender)draw(j)}
+}catch(e){}},220);
 </script>"""
 SCREEN=r"""<!doctype html><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1">
 <style>
