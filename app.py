@@ -75,13 +75,30 @@ button,input{font:inherit;padding:14px;border-radius:12px;border:0}button{backgr
 button:active,.pressed{transform:scale(.96);filter:brightness(1.35);box-shadow:0 0 22px #ff319988}button:disabled{opacity:.55;cursor:default}
 .big{font-size:64px;color:#ff55b0;font-weight:bold}.r{display:flex;justify-content:space-between;padding:11px 4px;border-bottom:1px solid #33202c}
 .muted{color:#a98d9d}.danger{display:block;margin:34px 0 4px;background:#24131e;color:#ff9bca;border:1px solid #6a294c}
-#ack{min-height:24px;color:#ff8ac7;font-weight:bold;margin-top:10px}.results{margin-top:34px}
+#ack{min-height:18px;color:#ff8ac7;font-weight:bold;margin-top:7px}
+.setupRow{display:grid;grid-template-columns:minmax(0,1fr) minmax(190px,1.45fr);gap:12px;align-items:end}
+.countBox{display:flex;flex-direction:column;gap:7px;color:#b99eae;font-size:14px;font-weight:bold;letter-spacing:.5px}
+.countBox input{width:100%;min-width:0;background:#fff;color:#111}
+.setupRow button{width:100%;min-height:54px}
+.results{margin-top:22px}
+.results .r{display:flex;justify-content:space-between;padding:11px 4px;border-bottom:1px solid #33202c}
+.results .r:last-child{border-bottom:0}
+#g h2,#res h2{margin:0 0 12px}.big{line-height:1}
+#g button{width:100%;min-height:58px;font-size:20px;margin-top:8px}
+.danger{width:100%;margin-top:22px}
+@media(max-width:560px){
+ body{padding:12px;font-size:16px}h1{font-size:27px;margin:8px 0 12px}.c{padding:14px;margin:10px 0;border-radius:14px}
+ .setupRow{grid-template-columns:1fr}.setupRow button{min-height:56px}
+ .countBox input{height:52px}
+ .results .r{padding:10px 2px;font-size:15px}
+ .big{font-size:52px}
+}
 </style>
 <h1>ТОЧНО В НОТУ</h1>
-<div class=c>УЧАСТНИКОВ <input id=n type=number min=1 max=10 value=4 style="width:70px"> <button id=init>НАЧАТЬ КОНКУРС</button><div id=ack></div></div>
+<div class=c><div class=setupRow><label class=countBox>КОЛИЧЕСТВО УЧАСТНИКОВ<input id=n type=number min=1 max=10 value=4></label><button id=init>НАЧАТЬ КОНКУРС</button></div><div id=ack></div></div>
 <div id=g class=c>ОЖИДАНИЕ</div>
-<div id=res class="c results"><h2>РЕЗУЛЬТАТЫ</h2><div class=muted>Пока нет завершённых участников</div></div>
 <button id=finish class=danger style="display:none">ЗАВЕРШИТЬ ИГРУ</button>
+<div id=res class="c results"><h2>РЕЗУЛЬТАТЫ</h2><div class=muted>Пока нет завершённых участников</div></div>
 <script>
 const $=x=>document.querySelector(x);let pending=0,last=null,lastRender="";
 async function post(u,b={},btn=null){
