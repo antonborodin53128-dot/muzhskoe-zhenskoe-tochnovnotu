@@ -160,19 +160,36 @@ async function audio(){try{let id=localStorage.getItem("voiceMeterDevice");st=aw
 $("#mic").onclick=audio;
 function pitch(a){let mean=0;for(let v of a)mean+=v;mean/=a.length;let rms=0;for(let v of a){let q=v-mean;rms+=q*q}rms=Math.sqrt(rms/a.length);if(rms<.006)return null;const minF=65,maxF=700,lo=Math.max(2,Math.floor(sr/maxF)),hi=Math.min(Math.floor(sr/minF),Math.floor(a.length*.48));let corr=new Float32Array(hi+1),best=0;for(let l=lo;l<=hi;l++){let xy=0,xx=0,yy=0,n=a.length-l;for(let i=0;i<n;i++){let xxv=a[i]-mean,yyv=a[i+l]-mean;xy+=xxv*yyv;xx+=xxv*xxv;yy+=yyv*yyv}let c=xy/Math.sqrt(xx*yy+1e-12);corr[l]=c;if(c>best)best=c}if(best<.60)return null;let lag=0,gate=Math.max(.64,best*.92);for(let l=lo+1;l<hi;l++)if(corr[l]>=gate&&corr[l]>=corr[l-1]&&corr[l]>=corr[l+1]){lag=l;break}if(!lag){for(let l=lo;l<=hi;l++)if(corr[l]===best){lag=l;break}}if(lag>lo&&lag<hi){let a1=corr[lag-1],a2=corr[lag],a3=corr[lag+1],d=a1-2*a2+a3;if(Math.abs(d)>1e-6)lag+=.5*(a1-a3)/d}let f=sr/lag;if(f<minF||f>maxF)return null;return 69+12*Math.log2(f/440)}
 const pcs=[0,2,4,5,7,9,11];
-function continuousPos(m){
- let pc=((m%12)+12)%12,c=pc;
- if(c>11.55)c=11.55;
- const a=[[0,0],[2,1],[4,2],[5,3],[7,4],[9,5],[11,6]];
- for(let k=0;k<a.length-1;k++){let x=a[k],y=a[k+1];if(c>=x[0]&&c<=y[0])return x[1]+(c-x[0])/(y[0]-x[0])*(y[1]-x[1])}
- return 6
+/* Exact equal-tempered mapping, A4=440 Hz.
+   pitch() returns fractional MIDI. We fold only for the displayed solfege
+   class, using circular pitch-class distance so B<->C is handled correctly. */
+function pcSignedFromC(m){
+ let pc=((m%12)+12)%12;
+ if(pc>11.5)pc-=12; // upper half-step belongs continuously to next C
+ return pc
 }
-function nearestNatural(m){let pc=((m%12)+12)%12,best=0,bd=99;pcs.forEach((v,i)=>{let d=Math.min(Math.abs(pc-v),12-Math.abs(pc-v));if(d<bd){bd=d;best=i}});return{i:best,d:bd}}
+function continuousPos(m){
+ let pc=pcSignedFromC(m);
+ const anchors=[[-1, -0.5],[0,0],[2,1],[4,2],[5,3],[7,4],[9,5],[11,6],[12,6.5]];
+ for(let k=0;k<anchors.length-1;k++){
+   let a=anchors[k],b=anchors[k+1];
+   if(pc>=a[0]&&pc<=b[0])return a[1]+(pc-a[0])/(b[0]-a[0])*(b[1]-a[1])
+ }
+ return pc<0?0:6
+}
+function nearestNatural(m){
+ let pc=((m%12)+12)%12,best=0,bd=99;
+ pcs.forEach((v,i)=>{
+   let raw=Math.abs(pc-v),d=Math.min(raw,12-raw);
+   if(d<bd){bd=d;best=i}
+ });
+ return{i:best,d:bd}
+}
 function active(i){document.querySelectorAll(".noteLabel").forEach((e,j)=>e.classList.toggle("active",j===i))}
 function listen(){
  an.getFloatTimeDomainData(b);let m=pitch(b),now=performance.now();
  if(m!=null){
-   if(lastMidi!=null){while(m-lastMidi>7)m-=12;while(lastMidi-m>7)m+=12}
+   /* Keep the measured MIDI pitch intact. Octave changes are legitimate frequencies. */
    lastMidi=m;lastVoice=now;
    let p=continuousPos(m);pitchHist.push(p);if(pitchHist.length>13)pitchHist.shift();
    let z=[...pitchHist].sort((a,b)=>a-b),med=z[Math.floor(z.length/2)];
@@ -193,7 +210,7 @@ function listen(){
  /* One source of truth: highlighted note follows the actual smoothed ball. */
  if(voiced && sm>=-.45 && sm<=6.45){
    let ballNote=Math.max(0,Math.min(6,Math.round(sm)));
-   active(Math.abs(sm-ballNote)<=.48?ballNote:-1);
+   active(Math.abs(sm-ballNote)<=.42?ballNote:-1);
  }else active(-1);
  let y=ty(sm);$("#dot").style.top=y+"%";$("#trail").style.top=y+"%";requestAnimationFrame(listen)
 }
