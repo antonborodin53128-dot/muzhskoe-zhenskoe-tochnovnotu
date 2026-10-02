@@ -185,11 +185,16 @@ function listen(){
      filteredPos+=Math.sign(diff)*step;
    }
    targetPos=filteredPos;
-   let nn=nearestNatural(m);active(nn.d<=.72?nn.i:-1)
+   /* active guide is driven by the ball position below, not raw mic pitch */
  }else if(now-lastVoice>180){targetPos=-1.05;filteredPos=-1;lastMidi=null;pitchHist.length=0;active(-1)}
  let voiced=(now-lastVoice)<=180;
  /* Singing: deliberately heavy movement. Silence: faster safe descent. */
  sm+=(targetPos-sm)*(voiced?.045:.18);
+ /* One source of truth: highlighted note follows the actual smoothed ball. */
+ if(voiced && sm>=-.45 && sm<=6.45){
+   let ballNote=Math.max(0,Math.min(6,Math.round(sm)));
+   active(Math.abs(sm-ballNote)<=.48?ballNote:-1);
+ }else active(-1);
  let y=ty(sm);$("#dot").style.top=y+"%";$("#trail").style.top=y+"%";requestAnimationFrame(listen)
 }
 function setWallGap(noteIndex){let y=ty(noteIndex),half=7.5;$("#wallTop").style.top="0";$("#wallTop").style.height=Math.max(0,y-half)+"%";$("#wallBottom").style.top=(y+half)+"%";$("#wallBottom").style.bottom="0";$("#wallBottom").style.height="auto"}
