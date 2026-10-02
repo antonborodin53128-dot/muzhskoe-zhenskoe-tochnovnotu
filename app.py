@@ -62,54 +62,6 @@ def reset():
  with lock:G.update(ps=[],i=-1,phase="idle",started=None,score=0,hit=0);return jsonify(snap())
 
 SETUP=r'''<!doctype html><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>SETUP</title><style>body{background:#050405;color:white;font:18px Arial;max-width:760px;margin:40px auto;padding:20px}button,select{font:inherit;padding:14px;margin:8px;background:#21101d;color:white;border:1px solid #ff3c9f;border-radius:12px}select{width:100%}#bar{height:18px;background:#26101e;border-radius:10px;overflow:hidden}#fill{height:100%;width:0;background:#ff3c9f}a{color:#ff70bf}
-/* ===== FRESH VISUAL V12 ===== */
-.stage{background:#08090d;padding:22px 28px 28px}
-.hud{height:96px;grid-template-columns:1.15fr 1fr 1.15fr}
-.brand{position:relative!important;display:inline-flex!important;align-items:center!important;padding:13px 19px!important;border:1px solid #393b46!important;border-radius:10px!important;background:linear-gradient(180deg,#171820,#0e0f15)!important;font-family:Arial,sans-serif!important;font-size:34px!important;font-style:normal!important;font-weight:950!important;letter-spacing:1.5px!important;color:#fff!important;box-shadow:0 8px 28px #0008,inset 0 1px #ffffff0d!important;text-shadow:none!important}
-.brand:before{content:""!important;position:absolute!important;left:-1px!important;top:14px!important;bottom:14px!important;width:4px!important;height:auto!important;background:#ff3f9d!important;box-shadow:0 0 14px #ff3f9d!important}
-.brand:after{display:none!important}
-.brand span{margin-left:9px!important;color:#ff4fa8!important;text-shadow:0 0 15px #ff3f9d55!important}
-.game{background:linear-gradient(180deg,#11131a,#090a0f)!important;border:1px solid #2c2e38!important;border-radius:16px!important;box-shadow:inset 0 0 70px #0008,0 18px 50px #0006!important}
-.motion{background:
-linear-gradient(115deg,transparent 0 42%,#ff3f9d08 43% 43.5%,transparent 44% 100%),
-linear-gradient(65deg,transparent 0 67%,#ffffff06 68% 68.5%,transparent 69% 100%)!important;opacity:1!important}
-.motion:before,.motion:after{display:none!important}
-#stars{display:none!important}
-.game:before,.game:after{display:none!important}
-.vignette{box-shadow:inset 0 0 85px #0009!important;z-index:3!important}
-
-/* Seven note lanes are explicit foreground game geometry. */
-#lines{position:absolute!important;inset:0!important;z-index:10!important;pointer-events:none!important}
-.guide{position:absolute!important;left:0!important;right:0!important;width:100%!important;height:1px!important;border:0!important;background:linear-gradient(90deg,#ff4fa812 0%,#ff4fa83d 12%,#ff4fa83d 86%,#ff4fa81a 100%)!important;box-shadow:0 1px 0 #ffffff08!important;opacity:1!important}
-.guide:after{content:""!important;position:absolute!important;left:0!important;right:0!important;top:0!important;border-top:1px dashed #ffffff18!important}
-.noteLabel{right:22px!important;width:72px!important;padding:5px 0!important;border-radius:6px!important;background:#0b0c12e8!important;border:1px solid #393b46!important;font-size:20px!important;color:#ff5aad!important;z-index:18!important;box-shadow:0 5px 14px #0008!important}
-.noteLabel.active{color:#fff!important;background:#ff3f9d!important;border-color:#ff9dce!important;transform:translateY(-50%) scale(1.5)!important;text-shadow:0 0 8px #fff!important;box-shadow:0 0 14px #ff4fa8,0 0 35px #ff2e9675!important}
-
-/* Player marker: clean luminous puck with directional notch. */
-.dot{width:32px!important;height:32px!important;background:radial-gradient(circle at 38% 34%,#fff 0 14%,#ff9dcc 20%,#ff3f9d 54%,#7d174e 100%)!important;border:2px solid #ffd1e8!important;box-shadow:0 0 10px #fff8,0 0 24px #ff3f9d!important;z-index:16!important;animation:none!important}
-.dot:before{inset:-7px!important;border:1px solid #ff6bb44f!important}
-.dot:after{display:none!important}
-
-/* Three clean parallel fading traces attached to the puck. */
-.trail{z-index:15!important;height:60px!important}
-.trail .main{stroke-width:2.1!important}
-.trail .sub,.trail .pulse{stroke-width:1!important;opacity:.38!important}
-
-/* Gate becomes a clean equalizer / audio rack obstacle. */
-.wallPart{width:58px!important;background:repeating-linear-gradient(180deg,#252733 0 8px,#15161e 8px 11px)!important;border:1px solid #515461!important;border-left:3px solid #ff3f9d!important;border-right:3px solid #ff3f9d!important;box-shadow:0 0 22px #000b,inset 0 0 12px #ff3f9d1c!important;z-index:14!important}
-.wallPart:after{content:""!important;position:absolute!important;inset:8px 9px!important;border-left:1px solid #ffffff16!important;border-right:1px solid #ffffff16!important}
-.wallCap{left:-7px!important;right:-7px!important;height:6px!important;background:#ff3f9d!important;border:0!important;box-shadow:0 0 14px #ff3f9d!important}
-
-/* Countdown: minimal rhythmic pulse, no old techno ring. */
-.msg{background:#090a0fdd!important;backdrop-filter:blur(3px)!important}
-.msg .countHud{width:190px!important;height:190px!important;border-radius:18px!important;border:1px solid #3a3c47!important;background:#11131af2!important;box-shadow:0 20px 60px #000c,inset 0 0 30px #ff3f9d0e!important}
-.msg .countHud:before{inset:-1px!important;border-radius:18px!important;border:0!important;border-left:5px solid #ff3f9d!important;animation:none!important}
-.msg .countHud:after{display:none!important}
-.countNum{font-size:100px!important;color:#fff!important;text-shadow:0 0 22px #ff3f9d88!important;animation:freshCount .72s cubic-bezier(.2,.85,.25,1)!important}
-.countLabel{bottom:24px!important;color:#ff5aad!important;letter-spacing:3px!important}
-.countSide{display:none!important}
-@keyframes freshCount{0%{transform:translateY(18px) scale(.72);opacity:0}30%{transform:translateY(0) scale(1.08);opacity:1}65%{transform:scale(1);opacity:1}100%{transform:translateY(-12px) scale(.92);opacity:.1}}
-
 </style><h1>НАСТРОЙКА МИКРОФОНА</h1><button id=a>РАЗРЕШИТЬ МИКРОФОН</button><select id=d><option>Выберите микрофон</option></select><p id=s>Не подключён</p><div id=bar><div id=fill></div></div><p><a href=/screen target=_blank>ЭКРАН ИГРЫ</a> · <a href=/control target=_blank>ПУЛЬТ</a></p><script>
 let st,c,an,b;const d=document.querySelector("#d"),s=document.querySelector("#s"),f=document.querySelector("#fill");
 async function list(){let q=(await navigator.mediaDevices.enumerateDevices()).filter(x=>x.kind==="audioinput"),sv=localStorage.getItem("voiceMeterDevice");d.innerHTML="";q.forEach((x,i)=>{let o=document.createElement("option");o.value=x.deviceId;o.textContent=x.label||"Аудиовход "+(i+1);if(sv===x.deviceId)o.selected=true;d.appendChild(o)})}
@@ -222,7 +174,7 @@ radial-gradient(ellipse at 91% 61%,#ff4b9e66 0 7%,#841c5b4d 17%,transparent 31%)
   <div class=stats><div class=pill><small>ВРЕМЯ</small><strong id=tm>01:00</strong></div><div class=pill><small>СЧЁТ</small><strong id=sc class=pink>0</strong></div></div>
  </header>
  <section id=game class=game>
-  <div class=motion></div><canvas id=stars></canvas><div id=lines>
+  <div class=motion></div><div class="lights"><i class="beam b1"></i><i class="beam b2"></i><i class="beam b3"></i><i class="beam b4"></i></div><div class="concertFloor"></div><canvas id="concertFx"></canvas><canvas id=stars></canvas><div id=lines>
 <div class=guide style="top:12%"></div><div class=guide style="top:24.6667%"></div><div class=guide style="top:37.3333%"></div><div class=guide style="top:50%"></div><div class=guide style="top:62.6667%"></div><div class=guide style="top:75.3333%"></div><div class=guide style="top:88%"></div>
 </div><div id=noteLabels></div><svg id=trail class=trail viewBox="0 0 300 72" preserveAspectRatio="none" aria-hidden="true">
 <defs>
@@ -255,6 +207,10 @@ function drawStars(t){
  requestAnimationFrame(drawStars)
 }
 addEventListener("resize",initStars);initStars();requestAnimationFrame(drawStars);
+const cfx=document.getElementById("concertFx"),cx=cfx.getContext("2d");let parts=[],cw=0,ch=0;
+function fxResize(){let d=devicePixelRatio||1;cw=cfx.clientWidth;ch=cfx.clientHeight;cfx.width=cw*d;cfx.height=ch*d;cx.setTransform(d,0,0,d,0,0);parts=Array.from({length:48},(_,i)=>({x:Math.random()*cw,y:Math.random()*ch,r:.5+Math.random()*1.5,v:.05+Math.random()*.16,a:.12+Math.random()*.38}))}
+function fxDraw(){cx.clearRect(0,0,cw,ch);for(let p of parts){p.x-=p.v;if(p.x<0)p.x=cw;cx.globalAlpha=p.a;cx.fillStyle="#ff8dcc";cx.beginPath();cx.arc(p.x,p.y,p.r,0,Math.PI*2);cx.fill()}requestAnimationFrame(fxDraw)}
+addEventListener("resize",fxResize);fxResize();requestAnimationFrame(fxDraw);
 const NS=["DO","RE","MI","FA","SOL","LA","TI"],$=x=>document.querySelector(x);
 let st,ctx,an,b,sr=48000,sm=3,targetPos=3,micOK=false,S=null,x=.84,mode="in",lt=performance.now(),hitting=false,pitchHist=[],wallNote=0,wavePhase=0,lastVoice=0;
 /* Высокие ноты сверху, низкие снизу: TI ... DO */
